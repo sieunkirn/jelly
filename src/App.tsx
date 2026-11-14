@@ -105,7 +105,7 @@ const PIXEL_PALETTE: Record<string, string> = {
   n: "#e4dff0",
 };
 
-// 거위 상점 주인: white goose in a pink infirmary apron (fills only; outline is generated)
+// 거위 상점 주인: white goose (fills only; outline is generated)
 const GOOSE_SPRITE = [
   "........................",
   "............wwww........",
@@ -121,12 +121,12 @@ const GOOSE_SPRITE = [
   "..ww.......wwwwww.......",
   ".wwww....wwwwwwwww......",
   ".wwwwwwwwwwwwwwwwww.....",
-  "..wwwwwnnwwwwppppwww....",
-  "..wwwnnnwwwwppcpppww....",
-  "...wwnnwwwwpcccppww.....",
-  "...wwwwwwwwppcpppww.....",
-  "....wwwwwwwpppppww......",
-  ".....wwwwwwwppppw.......",
+  "..wwwwwnnwwwwwwwwwww....",
+  "..wwwnnnwwwwwwwwwwww....",
+  "...wwnnwwwwwwwwwwww.....",
+  "...wwwwwwwwwwwwwwww.....",
+  "....wwwwwwwwwwwwww......",
+  ".....wwwwwwwwwwww.......",
   "........oo....oo........",
   ".......ooo...ooo........",
   "........................",
