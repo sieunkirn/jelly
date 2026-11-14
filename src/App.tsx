@@ -1162,6 +1162,27 @@ export default function App() {
     setShopMessage(`꽉꽉! ${weapon.name}, 좋은 선택이야. 바로 장착해 뒀어!`);
   };
 
+  // Combo card click: wipe all progress (coins, jelly book, weapons) and start over at 1-1.
+  const resetAll = () => {
+    try {
+      ["jelly-coins", "jelly-unlocked", "jelly-weapon", "jelly-owned-weapons"].forEach((key) =>
+        localStorage.removeItem(key),
+      );
+    } catch {
+      // Storage is optional.
+    }
+    setCoins(120);
+    setUnlocked(new Set<number>());
+    setOwnedWeapons(new Set<WeaponId>(["blaster"]));
+    setEquippedWeapon("blaster");
+    equippedRef.current = "blaster";
+    setSelectedJelly(0);
+    setDetailOpen(false);
+    setStage(1);
+    restart();
+    setShopMessage("게임을 처음부터 다시 시작해요!");
+  };
+
   const openShop = () => {
     setPaused(false);
     setView("shop");
@@ -1600,7 +1621,7 @@ export default function App() {
 
         <aside className="right-panel">
           <span className="side-caption right-caption">JELLY STATUS</span>
-          <div className="combo-card paper-card">
+          <div className="combo-card paper-card reset-trigger" onClick={resetAll}>
             <span>콤보!</span>
             <strong>×{combo}</strong>
           </div>
