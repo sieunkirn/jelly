@@ -1,1 +1,776 @@
-@import 'tailwindcss';
+@import url("https://fonts.googleapis.com/css2?family=Jua&family=Nunito:wght@700;800;900&display=swap");
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    font-family: "Jua", "Nunito", sans-serif;
+    color: #343052;
+    background: #9a97df;
+    font-synthesis: none;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+.game-shell {
+  --ink: #393463;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.12) 2px, transparent 2px) 0 0 / 100% 7px,
+    radial-gradient(circle at 17% 13%, #efb4da 0, transparent 24%),
+    linear-gradient(145deg, #dba8df 0%, #a8a4ef 38%, #8a88dd 100%);
+  image-rendering: pixelated;
+}
+
+.game-shell::before {
+  content: "";
+  position: absolute;
+  inset: 52% 0 0;
+  opacity: 0.42;
+  background:
+    linear-gradient(
+        90deg,
+        transparent 0 6%,
+        #7479bc 6% 8%,
+        transparent 8% 14%,
+        #7479bc 14% 18%,
+        transparent 18%
+      )
+      0 100% / 280px 170px repeat-x,
+    linear-gradient(to top, #eaecff 0 14%, transparent 14%) 0 100% / 100% 100%;
+  clip-path: polygon(
+    0 18%,
+    8% 28%,
+    15% 14%,
+    25% 30%,
+    34% 9%,
+    45% 35%,
+    56% 16%,
+    68% 30%,
+    79% 7%,
+    90% 24%,
+    100% 12%,
+    100% 100%,
+    0 100%
+  );
+}
+
+.sky-decor {
+  position: absolute;
+  color: #fff7a4;
+  font-size: 38px;
+  text-shadow: 3px 3px 0 #6661ad;
+  z-index: 1;
+}
+.sky-star-one {
+  left: 2.5%;
+  top: 26%;
+}
+.sky-star-two {
+  right: 11%;
+  top: 18%;
+}
+
+.topbar {
+  position: relative;
+  z-index: 6;
+  height: 108px;
+  display: grid;
+  grid-template-columns: minmax(235px, 1.1fr) minmax(190px, 0.9fr) minmax(245px, 1.18fr) minmax(
+      180px,
+      0.82fr
+    ) 72px;
+  gap: 16px;
+  align-items: center;
+  padding: 13px 20px 8px;
+  max-width: 1500px;
+  margin: auto;
+}
+
+.teacher-badge,
+.stat-card,
+.pause-button {
+  border: 5px solid var(--ink);
+  box-shadow:
+    0 6px 0 rgba(58, 51, 104, 0.32),
+    inset 0 0 0 3px rgba(255, 255, 255, 0.66);
+}
+
+.teacher-badge {
+  position: relative;
+  height: 94px;
+  border-radius: 42% 52% 44% 48%;
+  background: #fffdfb;
+  padding: 17px 48px 10px 62px;
+  line-height: 1;
+  transform: rotate(-1deg);
+}
+.teacher-badge small {
+  display: block;
+  font-size: 22px;
+}
+.teacher-badge strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 32px;
+  letter-spacing: 1px;
+}
+.capsule,
+.mini-capsule {
+  display: block;
+  border: 4px solid var(--ink);
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ec729d 0 50%, #ffe4e9 50%);
+  transform: rotate(-44deg);
+}
+.capsule {
+  position: absolute;
+  right: 13px;
+  bottom: 14px;
+  width: 36px;
+  height: 19px;
+}
+.bunny {
+  position: absolute;
+  left: 15px;
+  top: -24px;
+  width: 48px;
+  height: 58px;
+  border: 4px solid var(--ink);
+  border-radius: 48%;
+  background: white;
+}
+.bunny i,
+.bunny b {
+  position: absolute;
+  width: 13px;
+  height: 28px;
+  top: -21px;
+  border: 4px solid var(--ink);
+  border-radius: 50%;
+  background: white;
+}
+.bunny i {
+  left: 2px;
+  transform: rotate(-16deg);
+}
+.bunny b {
+  right: 2px;
+  transform: rotate(16deg);
+}
+.bunny em::before,
+.bunny em::after {
+  content: "";
+  position: absolute;
+  top: 24px;
+  width: 4px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+.bunny em::before {
+  left: 12px;
+}
+.bunny em::after {
+  right: 12px;
+}
+
+.stat-card {
+  height: 65px;
+  border-radius: 18px;
+  background: #fffdf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+  font-family: "Nunito", "Jua", sans-serif;
+  font-size: clamp(18px, 1.7vw, 26px);
+  font-weight: 900;
+  white-space: nowrap;
+}
+.stat-card svg {
+  width: 34px;
+  fill: #f5d754;
+  stroke: #b38733;
+  stroke-width: 1.8;
+}
+.score-card strong,
+.coin-card strong {
+  font-size: 1.2em;
+}
+.coin {
+  display: grid;
+  place-items: center;
+  width: 39px;
+  aspect-ratio: 1;
+  border: 4px solid #9b722c;
+  border-radius: 50%;
+  color: #b37b27;
+  background: #f5d95d;
+  box-shadow: inset 0 0 0 4px #fff29b;
+}
+.pause-button {
+  width: 69px;
+  height: 69px;
+  border-radius: 20px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.pause-button i {
+  width: 9px;
+  height: 35px;
+  border-radius: 5px;
+  background: #6659bd;
+}
+.play-icon {
+  width: 0;
+  height: 0;
+  border-top: 17px solid transparent;
+  border-bottom: 17px solid transparent;
+  border-left: 26px solid #6659bd;
+  margin-left: 5px;
+}
+
+.game-layout {
+  position: relative;
+  z-index: 4;
+  width: min(1460px, calc(100vw - 30px));
+  height: calc(100vh - 126px);
+  min-height: 650px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(220px, 0.86fr) minmax(600px, 2.65fr) minmax(205px, 0.82fr);
+  gap: 18px;
+}
+
+.board-wrap {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  border: 8px solid rgba(62, 54, 105, 0.92);
+  border-radius: 32px 32px 0 0;
+  box-shadow:
+    0 0 0 6px rgba(244, 235, 255, 0.75),
+    inset 0 0 0 5px rgba(255, 255, 255, 0.25);
+  background: #6664a7;
+}
+.game-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.left-panel,
+.right-panel {
+  position: relative;
+  min-width: 0;
+}
+.paper-card {
+  background: #fffaf0;
+  border: 5px solid var(--ink);
+  box-shadow:
+    7px 7px 0 rgba(91, 75, 142, 0.35),
+    inset 0 0 0 4px rgba(224, 178, 214, 0.5);
+}
+.shots-note {
+  position: relative;
+  width: 90%;
+  min-height: 195px;
+  margin: 85px auto 0;
+  padding: 40px 15px 20px;
+  text-align: center;
+  transform: rotate(-2deg);
+  border-radius: 5px;
+}
+.shots-note::before,
+.shots-note::after {
+  content: "";
+  position: absolute;
+  left: -12px;
+  width: 28px;
+  height: 4px;
+  background: #a890c4;
+  box-shadow:
+    0 35px #a890c4,
+    0 70px #a890c4,
+    0 105px #a890c4,
+    0 140px #a890c4;
+}
+.shots-note::before {
+  top: 28px;
+}
+.shots-note small {
+  display: block;
+  font-size: clamp(19px, 1.7vw, 27px);
+}
+.shots-note strong {
+  display: block;
+  margin-top: 3px;
+  font-family: "Nunito", sans-serif;
+  font-size: 78px;
+  line-height: 1;
+}
+.tape {
+  position: absolute;
+  top: -17px;
+  left: 33%;
+  width: 73px;
+  height: 31px;
+  background: rgba(246, 230, 190, 0.84);
+  transform: rotate(4deg);
+}
+.mini-capsule {
+  position: absolute;
+  right: 20px;
+  bottom: 22px;
+  width: 31px;
+  height: 17px;
+}
+.doctor {
+  position: absolute;
+  width: 130%;
+  max-width: 330px;
+  left: -27px;
+  bottom: -5px;
+  overflow: visible;
+  filter: drop-shadow(4px 5px 0 rgba(91, 75, 142, 0.22));
+}
+
+.combo-card {
+  width: 98%;
+  margin: 110px 0 0;
+  min-height: 135px;
+  padding: 22px 10px 13px;
+  border-radius: 48% 38% 42% 31%;
+  text-align: center;
+  transform: rotate(1deg);
+}
+.combo-card span {
+  display: block;
+  font-size: clamp(25px, 2.6vw, 40px);
+  line-height: 0.9;
+  color: #50448e;
+}
+.combo-card strong {
+  display: block;
+  font-family: "Nunito", sans-serif;
+  font-size: clamp(43px, 4vw, 63px);
+  line-height: 1;
+}
+.mission-card {
+  position: relative;
+  width: 98%;
+  min-height: 220px;
+  margin-top: 50px;
+  padding: 18px 14px;
+  transform: rotate(-1deg);
+  border-radius: 5px;
+}
+.mission-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 3px solid #d4b6cf;
+  font-size: clamp(22px, 2vw, 30px);
+}
+.mission-title svg {
+  width: 30px;
+  fill: #f5d754;
+  stroke: #a98131;
+  stroke-width: 2;
+}
+.mission-card p {
+  margin: 15px 0 0;
+  font-size: clamp(21px, 2.1vw, 31px);
+  line-height: 1.45;
+}
+.mission-card .preview-jelly {
+  position: absolute;
+  width: 58px;
+  height: 52px;
+  right: 14px;
+  bottom: 13px;
+}
+
+.next-bubble {
+  position: absolute;
+  left: -30px;
+  right: 0;
+  bottom: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.next-bubble > span {
+  position: relative;
+  z-index: 2;
+  padding: 7px 18px;
+  margin-bottom: -8px;
+  border: 5px solid var(--ink);
+  border-radius: 18px;
+  background: white;
+  font-size: 24px;
+}
+.preview-glass {
+  width: 150px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 10px solid #fff;
+  outline: 6px solid #6660af;
+  border-radius: 50%;
+  background: rgba(215, 230, 255, 0.76);
+  box-shadow:
+    inset 0 0 0 6px #adc4f2,
+    8px 10px 0 rgba(70, 60, 124, 0.26);
+}
+.preview-glass .preview-jelly {
+  width: 76px;
+  height: 68px;
+}
+
+.preview-jelly {
+  --jelly: #d85a9c;
+  --jelly-dark: #ad3d75;
+  position: relative;
+  width: 64px;
+  height: 58px;
+  border: 4px solid var(--jelly-dark);
+  border-radius: 45% 48% 43% 46%;
+  background: var(--jelly);
+  box-shadow:
+    inset 7px 8px 0 rgba(255, 255, 255, 0.32),
+    0 5px 0 var(--jelly-dark);
+}
+.preview-heart {
+  width: 65px;
+  height: 58px;
+  border-radius: 45% 45% 48% 48%;
+  clip-path: polygon(
+    50% 100%,
+    8% 58%,
+    1% 32%,
+    8% 10%,
+    27% 1%,
+    50% 15%,
+    73% 1%,
+    92% 10%,
+    99% 32%,
+    92% 58%
+  );
+}
+.eye {
+  position: absolute;
+  top: 48%;
+  width: 5px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3c355a;
+  z-index: 2;
+}
+.eye-left {
+  left: 31%;
+}
+.eye-right {
+  right: 31%;
+}
+.mouth {
+  position: absolute;
+  left: 45%;
+  top: 61%;
+  width: 10%;
+  height: 8%;
+  border-bottom: 3px solid #3c355a;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.foreground-jellies {
+  position: absolute;
+  z-index: 8;
+  left: calc(50% - 480px);
+  bottom: -8px;
+  display: flex;
+  gap: 5px;
+  align-items: end;
+}
+.foreground-jellies .preview-jelly:nth-child(2) {
+  width: 76px;
+  height: 64px;
+}
+.help-text {
+  position: fixed;
+  z-index: 10;
+  left: 50%;
+  bottom: 8px;
+  translate: -50% 0;
+  margin: 0;
+  padding: 7px 18px;
+  border-radius: 20px;
+  color: white;
+  background: rgba(49, 43, 87, 0.72);
+  font-family: "Nunito", "Jua", sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.2px;
+  pointer-events: none;
+}
+
+.game-overlay {
+  position: absolute;
+  z-index: 10;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(54, 47, 99, 0.62);
+  backdrop-filter: blur(3px);
+}
+.overlay-card {
+  width: min(390px, 90%);
+  padding: 35px 28px 30px;
+  border: 7px solid var(--ink);
+  border-radius: 34px;
+  text-align: center;
+  background: #fffaf3;
+  box-shadow:
+    inset 0 0 0 5px #f0cfe4,
+    8px 10px 0 rgba(43, 37, 81, 0.3);
+}
+.overlay-card .preview-jelly {
+  margin: 0 auto 20px;
+  width: 85px;
+  height: 74px;
+}
+.overlay-card h2 {
+  margin: 0;
+  font-size: 30px;
+}
+.overlay-card p {
+  margin: 10px 0 22px;
+  color: #777096;
+  font-size: 18px;
+}
+.overlay-card button {
+  min-width: 150px;
+  padding: 12px 24px;
+  border: 4px solid var(--ink);
+  border-radius: 18px;
+  color: white;
+  background: #7767ca;
+  box-shadow: 0 5px 0 #4e438f;
+  font-size: 20px;
+}
+.overlay-card button:active {
+  translate: 0 4px;
+  box-shadow: 0 1px 0 #4e438f;
+}
+
+@media (max-width: 1050px) {
+  .topbar {
+    height: 92px;
+    grid-template-columns: 1fr 1.1fr 1.15fr 64px;
+    gap: 9px;
+    padding: 10px;
+  }
+  .teacher-badge {
+    display: none;
+  }
+  .stat-card {
+    height: 58px;
+    border-width: 4px;
+  }
+  .coin-card {
+    display: none;
+  }
+  .pause-button {
+    width: 60px;
+    height: 60px;
+    border-width: 4px;
+  }
+  .game-layout {
+    width: calc(100vw - 20px);
+    height: calc(100vh - 103px);
+    grid-template-columns: minmax(135px, 0.55fr) minmax(500px, 2.5fr) minmax(140px, 0.55fr);
+    gap: 10px;
+  }
+  .shots-note {
+    margin-top: 45px;
+    width: 100%;
+    min-height: 160px;
+    padding-top: 34px;
+  }
+  .shots-note strong {
+    font-size: 62px;
+  }
+  .doctor {
+    width: 180%;
+    left: -72px;
+  }
+  .combo-card {
+    margin-top: 75px;
+  }
+  .mission-card {
+    padding: 12px 9px;
+    min-height: 190px;
+    margin-top: 32px;
+  }
+  .mission-card .preview-jelly {
+    display: none;
+  }
+  .next-bubble {
+    left: -32px;
+  }
+  .preview-glass {
+    width: 115px;
+  }
+  .next-bubble > span {
+    font-size: 18px;
+    padding: 5px 10px;
+  }
+  .foreground-jellies {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .game-shell {
+    min-height: 100svh;
+  }
+  .topbar {
+    height: 74px;
+    grid-template-columns: 1fr 1.35fr 52px;
+    padding: 7px;
+  }
+  .stat-card {
+    height: 49px;
+    border-width: 3px;
+    border-radius: 14px;
+    font-size: 14px;
+    gap: 6px;
+  }
+  .stat-card svg {
+    width: 23px;
+  }
+  .score-card strong {
+    font-size: 17px;
+  }
+  .pause-button {
+    width: 49px;
+    height: 49px;
+    border-width: 3px;
+    border-radius: 14px;
+  }
+  .pause-button i {
+    height: 25px;
+    width: 7px;
+  }
+  .game-layout {
+    width: calc(100vw - 12px);
+    height: calc(100svh - 80px);
+    min-height: 560px;
+    grid-template-columns: 1fr;
+  }
+  .left-panel,
+  .right-panel {
+    position: absolute;
+    z-index: 7;
+    pointer-events: none;
+  }
+  .left-panel {
+    left: 8px;
+    top: 8px;
+  }
+  .right-panel {
+    right: 8px;
+    top: 8px;
+  }
+  .shots-note {
+    width: 100px;
+    min-height: 70px;
+    margin: 0;
+    padding: 12px 6px 6px;
+    border-width: 3px;
+  }
+  .shots-note small {
+    font-size: 12px;
+  }
+  .shots-note strong {
+    font-size: 34px;
+  }
+  .shots-note .tape,
+  .shots-note .mini-capsule,
+  .doctor {
+    display: none;
+  }
+  .combo-card {
+    width: 88px;
+    min-height: 68px;
+    margin: 0;
+    padding: 10px 5px 5px;
+    border-width: 3px;
+  }
+  .combo-card span {
+    font-size: 17px;
+  }
+  .combo-card strong {
+    font-size: 30px;
+  }
+  .mission-card,
+  .next-bubble {
+    display: none;
+  }
+  .board-wrap {
+    border-width: 5px;
+    border-radius: 22px 22px 0 0;
+  }
+  .help-text {
+    bottom: 5px;
+    width: max-content;
+    max-width: 90%;
+    text-align: center;
+    font-size: 11px;
+  }
+}
+
+@media (max-height: 700px) and (min-width: 761px) {
+  .topbar {
+    height: 86px;
+  }
+  .game-layout {
+    height: calc(100vh - 95px);
+    min-height: 520px;
+  }
+  .shots-note {
+    margin-top: 25px;
+    min-height: 150px;
+  }
+  .doctor {
+    max-height: 330px;
+  }
+  .combo-card {
+    margin-top: 40px;
+  }
+  .mission-card {
+    margin-top: 22px;
+    min-height: 175px;
+  }
+  .preview-glass {
+    width: 105px;
+  }
+}
