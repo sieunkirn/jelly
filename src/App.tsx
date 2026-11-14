@@ -10,7 +10,171 @@ type Bubble = {
 };
 
 type GameStatus = "playing" | "won" | "lost";
-type View = "game" | "collection";
+type View = "game" | "collection" | "shop";
+type WeaponId = "blaster" | "bbgun" | "sword" | "rainbow";
+
+// Coins unlock a jelly's story without clearing its stage.
+const JELLY_PRICE = 60;
+const BASE_SHOTS = 12;
+
+const WEAPONS: {
+  id: WeaponId;
+  name: string;
+  price: number;
+  effect: string;
+  description: string;
+}[] = [
+  {
+    id: "blaster",
+    name: "젤리 블래스터",
+    price: 0,
+    effect: "기본 무기 · 발사 12회",
+    description: "보건실 서랍에서 꺼낸 은영의 첫 무기. 무난하고 믿음직하다.",
+  },
+  {
+    id: "bbgun",
+    name: "비비탄 총",
+    price: 100,
+    effect: "발사 횟수 +3",
+    description: "문방구에서 산 장난감 비비탄 총. 은영이 쏘면 젤리에게는 진짜다.",
+  },
+  {
+    id: "sword",
+    name: "플라스틱 장난감 칼",
+    price: 150,
+    effect: "클리어 코인 2배",
+    description: "형광빛 플라스틱 칼. 휘두를 때마다 젤리가 남긴 코인이 두 배로 튄다.",
+  },
+  {
+    id: "rainbow",
+    name: "무지개 광선검",
+    price: 250,
+    effect: "젤리 6개 이상 터뜨리면 발사 +1",
+    description: "은영의 기운을 가득 담은 최종 무기. 크게 터뜨릴수록 힘이 돌아온다.",
+  },
+];
+
+const shotsFor = (weapon: WeaponId) => BASE_SHOTS + (weapon === "bbgun" ? 3 : 0);
+
+const readWeapon = (): WeaponId => {
+  try {
+    const saved = localStorage.getItem("jelly-weapon");
+    return WEAPONS.some((w) => w.id === saved) ? (saved as WeaponId) : "blaster";
+  } catch {
+    return "blaster";
+  }
+};
+
+function WeaponIcon({ id }: { id: WeaponId }) {
+  if (id === "bbgun") {
+    return (
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <rect
+          x="8"
+          y="22"
+          width="40"
+          height="12"
+          rx="3"
+          fill="#75a8ed"
+          stroke="#393463"
+          strokeWidth="3"
+        />
+        <rect
+          x="46"
+          y="25"
+          width="12"
+          height="6"
+          rx="2"
+          fill="#c9d8f5"
+          stroke="#393463"
+          strokeWidth="3"
+        />
+        <path
+          d="M16 34h12l-4 18h-10z"
+          fill="#4b78bd"
+          stroke="#393463"
+          strokeWidth="3"
+          strokeLinejoin="round"
+        />
+        <circle cx="38" cy="28" r="3" fill="#fff" />
+      </svg>
+    );
+  }
+  if (id === "sword") {
+    return (
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <path
+          d="M46 6l8 4-26 30-6-6z"
+          fill="#b8f06a"
+          stroke="#393463"
+          strokeWidth="3"
+          strokeLinejoin="round"
+        />
+        <path d="M14 36l14 14" stroke="#393463" strokeWidth="9" strokeLinecap="round" />
+        <path d="M14 36l14 14" stroke="#ef729e" strokeWidth="4" strokeLinecap="round" />
+        <path d="M12 52l6-6" stroke="#393463" strokeWidth="8" strokeLinecap="round" />
+        <path d="M12 52l6-6" stroke="#f5d95a" strokeWidth="3" strokeLinecap="round" />
+      </svg>
+    );
+  }
+  if (id === "rainbow") {
+    return (
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <defs>
+          <linearGradient id="rainbow-blade" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stopColor="#ef655d" />
+            <stop offset=".35" stopColor="#f5d95a" />
+            <stop offset=".65" stopColor="#8fcb66" />
+            <stop offset="1" stopColor="#8c5bd8" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M24 40L52 8l4 4-28 32z"
+          fill="url(#rainbow-blade)"
+          stroke="#393463"
+          strokeWidth="3"
+          strokeLinejoin="round"
+        />
+        <path d="M16 38l10 10" stroke="#393463" strokeWidth="6" strokeLinecap="round" />
+        <path d="M10 54l10-10" stroke="#393463" strokeWidth="8" strokeLinecap="round" />
+        <path d="M10 54l10-10" stroke="#d6d1ea" strokeWidth="3" strokeLinecap="round" />
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <rect
+        x="10"
+        y="20"
+        width="38"
+        height="16"
+        rx="8"
+        fill="#fff"
+        stroke="#393463"
+        strokeWidth="3"
+      />
+      <rect
+        x="46"
+        y="23"
+        width="10"
+        height="10"
+        rx="3"
+        fill="#75a8ed"
+        stroke="#393463"
+        strokeWidth="3"
+      />
+      <circle cx="22" cy="28" r="4" fill="#75a8ed" />
+      <circle cx="34" cy="28" r="4" fill="#ef729e" />
+      <path
+        d="M18 36h10l-3 16h-9z"
+        fill="#c9d8f5"
+        stroke="#393463"
+        strokeWidth="3"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 type CollectionTab = "profile" | "story" | "observe" | "secret";
 
 const W = 720;
@@ -35,7 +199,7 @@ const JELLIES = [
     name: "옴벌레 젤리",
     title: "작고 성가신 마음",
     color: 0,
-    image: "/jellies/bug.png",
+    image: "./jellies/bug.png",
     emotion: "집착과 질투",
     motif: "전학생 옴 / 럭키, 혼란",
     location: "본관 2층 신발장 앞",
@@ -49,7 +213,7 @@ const JELLIES = [
     name: "문어 젤리",
     title: "여덟 개의 손",
     color: 1,
-    image: "/jellies/octopus.png",
+    image: "./jellies/octopus.png",
     emotion: "그리움과 미련",
     motif: "토요일의 데이트메이트",
     location: "토요일 오후의 빈 놀이터",
@@ -63,7 +227,7 @@ const JELLIES = [
     name: "두꺼비 젤리",
     title: "행운을 삼킨 아이",
     color: 2,
-    image: "/jellies/toad.png",
+    image: "./jellies/toad.png",
     emotion: "욕심과 행운",
     motif: "럭키, 혼란",
     location: "소원이 가장 많이 오가는 시험 기간의 교실",
@@ -77,7 +241,7 @@ const JELLIES = [
     name: "이끼 젤리",
     title: "아무도 모르는 자리",
     color: 3,
-    image: "/jellies/moss.png",
+    image: "./jellies/moss.png",
     emotion: "고립과 외로움",
     motif: "오리 선생 한아름",
     location: "햇빛이 들지 않는 구관 계단과 창고",
@@ -91,7 +255,7 @@ const JELLIES = [
     name: "두발 젤리",
     title: "어디로든 도망치는 아이",
     color: 4,
-    image: "/jellies/twoleg.png",
+    image: "./jellies/twoleg.png",
     emotion: "불안과 두려움",
     motif: "원어민 교사 매켄지",
     location: "수업이 끝난 뒤의 긴 복도",
@@ -105,7 +269,7 @@ const JELLIES = [
     name: "해파리 젤리",
     title: "투명한 마음",
     color: 6,
-    image: "/jellies/jellyfish.png",
+    image: "./jellies/jellyfish.png",
     emotion: "사랑과 동경",
     motif: "사랑해 젤리피시",
     location: "해 질 무렵의 과학실 창가",
@@ -119,7 +283,7 @@ const JELLIES = [
     name: "하트 젤리",
     title: "남겨진 온기",
     color: 5,
-    image: "/jellies/heart.png",
+    image: "./jellies/heart.png",
     emotion: "애정과 상실",
     motif: "가로등 아래 김강선",
     location: "매일 같은 시간, 운동장 끝의 오래된 가로등 아래",
@@ -133,7 +297,7 @@ const JELLIES = [
     name: "흰수염고래 젤리",
     title: "바다보다 깊은 기억",
     color: 4,
-    image: "/jellies/whale.png",
+    image: "./jellies/whale.png",
     emotion: "기억과 공존",
     motif: "돌풍 속에 우리 둘이 안고 있었지 / 학교에 숨겨진 오래된 힘",
     location: "학교 지하실 아래, 존재하지 않는 바다",
@@ -151,9 +315,40 @@ const cellCenter = (row: number, col: number) => ({
   y: 52 + row * Y_GAP,
 });
 
-function initialBubbles(stage = 1) {
+// STAGE 1-2 is the deliberately hard stage for the demo.
+const HARD_STAGE = 2;
+
+function hardBubbles() {
   const bubbles: Bubble[] = [];
   let id = 1;
+  // Deterministic scatter: 6 rows, 5 colors, small mixed clusters.
+  let seed = 7;
+  const rand = () => {
+    seed = (seed * 1103515245 + 12345) % 2147483648;
+    return seed / 2147483648;
+  };
+  for (let row = 0; row < 6; row++) {
+    const count = row % 2 ? 10 : 11;
+    for (let col = 0; col < count; col++) {
+      const { x, y } = cellCenter(row, col);
+      bubbles.push({
+        id: id++,
+        x,
+        y,
+        color: Math.floor(rand() * 5),
+        heart: rand() > 0.85,
+      });
+    }
+  }
+  return bubbles;
+}
+
+function initialBubbles(stage = 1) {
+  if (stage === HARD_STAGE) return hardBubbles();
+  const bubbles: Bubble[] = [];
+  let id = 1;
+  // Demo difficulty: four vertical color columns, each reaching the bottom row.
+  // One matching hit pops a whole column, so a stage clears in about 4–6 shots.
   const stageRows = 3;
   for (let row = 0; row < stageRows; row++) {
     const count = row % 2 ? 10 : 11;
@@ -163,7 +358,7 @@ function initialBubbles(stage = 1) {
         id: id++,
         x,
         y,
-        color: (row * 3 + col * 2 + Math.floor(col / 3) + stage - 1) % 4,
+        color: (Math.floor(col / 3) + stage - 1) % 4,
         heart: (row + col) % 7 === 3,
       });
     }
@@ -205,7 +400,7 @@ function Doctor() {
   return (
     <img
       className="doctor"
-      src="/doctor.png"
+      src="./doctor.png"
       alt="젤리 블래스터를 든 픽셀 아트 보건교사"
       draggable={false}
     />
@@ -214,23 +409,58 @@ function Doctor() {
 
 export default function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [, setScore] = useState(12340);
-  const [shots, setShots] = useState(50);
+  const [, setScore] = useState(0);
+  const [equippedWeapon, setEquippedWeapon] = useState<WeaponId>(readWeapon);
+  const [ownedWeapons, setOwnedWeapons] = useState<Set<WeaponId>>(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("jelly-owned-weapons") ?? "[]");
+      return new Set<WeaponId>(["blaster", ...(Array.isArray(saved) ? saved : [])]);
+    } catch {
+      return new Set<WeaponId>(["blaster"]);
+    }
+  });
+  const [shopMessage, setShopMessage] = useState("");
+  const equippedRef = useRef(equippedWeapon);
+  const [shots, setShots] = useState(() => shotsFor(readWeapon()));
   const [paused, setPaused] = useState(false);
   const [status, setStatus] = useState<GameStatus>("playing");
   const [currentColor, setCurrentColor] = useState(0);
-  const [nextColor, setNextColor] = useState(0);
-  const [combo, setCombo] = useState(2);
+  const [nextColor, setNextColor] = useState(1);
+  const [combo, setCombo] = useState(0);
   const [gameKey, setGameKey] = useState(0);
   const [stage, setStage] = useState(1);
   const [view, setView] = useState<View>("game");
-  const [coins, setCoins] = useState(120);
-  const [unlocked, setUnlocked] = useState<Set<number>>(() => new Set());
+  const [coins, setCoins] = useState(() => {
+    try {
+      return Number(localStorage.getItem("jelly-coins")) || 120;
+    } catch {
+      return 120;
+    }
+  });
+  const [unlocked, setUnlocked] = useState<Set<number>>(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("jelly-unlocked") ?? "[]");
+      return new Set<number>(Array.isArray(saved) ? saved.filter(Number.isInteger) : []);
+    } catch {
+      return new Set<number>();
+    }
+  });
   const [selectedJelly, setSelectedJelly] = useState(0);
   const [collectionTab, setCollectionTab] = useState<CollectionTab>("profile");
   const [observing, setObserving] = useState(false);
+  // Collection shows the jelly list first; a jelly's story opens only after clicking it.
+  const [detailOpen, setDetailOpen] = useState(false);
   const pausedRef = useRef(paused);
   const statusRef = useRef<GameStatus>(status);
+  const boardSnapshotRef = useRef<{
+    gameKey: number;
+    stage: number;
+    bubbles: Bubble[];
+    id: number;
+    projectile: (Bubble & { vx: number; vy: number }) | null;
+    aimX: number;
+    aimY: number;
+  } | null>(null);
 
   useEffect(() => {
     pausedRef.current = paused;
@@ -238,15 +468,38 @@ export default function App() {
   useEffect(() => {
     statusRef.current = status;
   }, [status]);
+  useEffect(() => {
+    try {
+      localStorage.setItem("jelly-coins", String(coins));
+      localStorage.setItem("jelly-unlocked", JSON.stringify([...unlocked]));
+    } catch {
+      // The game remains playable when browser storage is unavailable.
+    }
+  }, [coins, unlocked]);
+  useEffect(() => {
+    equippedRef.current = equippedWeapon;
+    try {
+      localStorage.setItem("jelly-weapon", equippedWeapon);
+      localStorage.setItem("jelly-owned-weapons", JSON.stringify([...ownedWeapons]));
+    } catch {
+      // Storage is optional.
+    }
+  }, [equippedWeapon, ownedWeapons]);
+  useEffect(() => {
+    if (!shopMessage) return;
+    const timer = window.setTimeout(() => setShopMessage(""), 2200);
+    return () => window.clearTimeout(timer);
+  }, [shopMessage]);
 
   const restart = useCallback(() => {
-    setScore(12340);
-    setShots(50);
+    setScore(0);
+    setShots(shotsFor(equippedRef.current));
     setPaused(false);
     setStatus("playing");
     setCurrentColor(0);
-    setNextColor(0);
-    setCombo(2);
+    setNextColor(1);
+    setCombo(0);
+    boardSnapshotRef.current = null;
     setGameKey((v) => v + 1);
   }, []);
 
@@ -256,13 +509,20 @@ export default function App() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let bubbles = initialBubbles(stage);
-    let projectile: (Bubble & { vx: number; vy: number }) | null = null;
-    let aimX = W / 2;
-    let aimY = 330;
-    let current = 0;
-    let next = 0;
-    let id = 1000;
+    const savedBoard = boardSnapshotRef.current;
+    let bubbles =
+      savedBoard?.gameKey === gameKey && savedBoard.stage === stage
+        ? savedBoard.bubbles
+        : initialBubbles(stage);
+    let projectile =
+      savedBoard?.gameKey === gameKey && savedBoard.stage === stage ? savedBoard.projectile : null;
+    let aimX =
+      savedBoard?.gameKey === gameKey && savedBoard.stage === stage ? savedBoard.aimX : W / 2;
+    let aimY =
+      savedBoard?.gameKey === gameKey && savedBoard.stage === stage ? savedBoard.aimY : 330;
+    let current = currentColor;
+    let next = nextColor;
+    let id = savedBoard?.gameKey === gameKey && savedBoard.stage === stage ? savedBoard.id : 1000;
     let raf = 0;
     let last = performance.now();
     let burst = 0;
@@ -367,7 +627,10 @@ export default function App() {
         nearestNeighbors(b).forEach((n) => queue.push(n));
       }
 
-      if (cluster.length < 2) return;
+      if (cluster.length < 3) {
+        setCombo(0);
+        return;
+      }
       const removed = new Set(cluster.map((b) => b.id));
       const connected = new Set<number>();
       const topQueue = bubbles.filter((b) => b.y < 82 && !removed.has(b.id));
@@ -385,12 +648,14 @@ export default function App() {
       bubbles = bubbles.filter((b) => !removed.has(b.id));
       const earned = removed.size * 120 * Math.max(1, Math.min(4, Math.floor(removed.size / 3)));
       setScore((s) => s + earned);
-      setCombo(Math.min(9, Math.max(2, Math.floor(removed.size / 3) + 1)));
+      setCombo((previous) => Math.min(9, previous + 1));
       burst = 1;
+      // 무지개 광선검: a big pop gives one shot back.
+      if (equippedRef.current === "rainbow" && removed.size >= 6) setShots((s) => s + 1);
       if (bubbles.length === 0) {
         statusRef.current = "won";
         setStatus("won");
-        setCoins((value) => value + 30);
+        setCoins((value) => value + (equippedRef.current === "sword" ? 60 : 30));
         setSelectedJelly(stage - 1);
         setCollectionTab("story");
         setUnlocked((currentUnlocked) => {
@@ -410,7 +675,9 @@ export default function App() {
         const count = row % 2 ? 10 : 11;
         for (let col = 0; col < count; col++) {
           const p = cellCenter(row, col);
-          if (bubbles.some((b) => Math.hypot(b.x - p.x, b.y - p.y) < 20)) continue;
+          const nearby = bubbles.filter((b) => Math.hypot(b.x - p.x, b.y - p.y) < 61);
+          if (bubbles.some((b) => Math.hypot(b.x - p.x, b.y - p.y) < 48)) continue;
+          if (row > 0 && nearby.length === 0) continue;
           const dist = Math.hypot(projectile.x - p.x, projectile.y - p.y);
           if (dist < best.dist) best = { row, col, dist, ...p };
         }
@@ -425,7 +692,9 @@ export default function App() {
       bubbles.push(placed);
       projectile = null;
       resolveMatches(placed);
-      current = next;
+      // Never load a color that is no longer on the board (no wasted demo shots).
+      const isPresent = (color: number) => bubbles.some((b) => b.color === color);
+      current = isPresent(next) ? next : randomAvailableColor();
       next = randomAvailableColor();
       setCurrentColor(current);
       setNextColor(next);
@@ -528,16 +797,43 @@ export default function App() {
       const originY = 641;
       if (!projectile && statusRef.current === "playing") {
         const angle = Math.atan2(aimY - originY, aimX - originX);
-        ctx.fillStyle = "#f39ac3";
-        for (let d = 60; d < 345; d += 32) {
-          const px = originX + Math.cos(angle) * d;
-          const py = originY + Math.sin(angle) * d;
-          if (py < 40) break;
+        let x = originX;
+        let y = originY;
+        let vx = Math.cos(angle);
+        const vy = Math.sin(angle);
+        let hit = false;
+        ctx.fillStyle = "rgba(255,255,255,.9)";
+        ctx.strokeStyle = "rgba(255,255,255,.75)";
+        ctx.lineWidth = 2;
+        ctx.setLineDash([2, 13]);
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        for (let step = 0; step < 220; step++) {
+          x += vx * 4;
+          y += vy * 4;
+          if (x < R + 8) {
+            x = R + 8;
+            vx = Math.abs(vx);
+          } else if (x > W - R - 8) {
+            x = W - R - 8;
+            vx = -Math.abs(vx);
+          }
+          if (y < R + 5 || bubbles.some((b) => Math.hypot(b.x - x, b.y - y) < R * 2.08)) {
+            hit = true;
+            break;
+          }
+          ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+        if (hit) {
           ctx.beginPath();
-          ctx.arc(px, py, 5.5, 0, Math.PI * 2);
+          ctx.arc(x, y, 9, 0, Math.PI * 2);
+          ctx.fillStyle = COLORS[current];
           ctx.fill();
           ctx.strokeStyle = "#fff";
-          ctx.lineWidth = 2;
+          ctx.lineWidth = 3;
           ctx.stroke();
         }
       }
@@ -599,6 +895,7 @@ export default function App() {
     canvas.addEventListener("pointerdown", onDown);
     raf = requestAnimationFrame(draw);
     return () => {
+      boardSnapshotRef.current = { gameKey, stage, bubbles, id, projectile, aimX, aimY };
       observer.disconnect();
       canvas.removeEventListener("pointermove", onMove);
       canvas.removeEventListener("pointerdown", onDown);
@@ -606,16 +903,73 @@ export default function App() {
     };
   }, [gameKey, stage, view]);
 
+  const buyJelly = (index: number) => {
+    if (unlocked.has(index) || JELLIES[index].special) return;
+    if (coins < JELLY_PRICE) {
+      setShopMessage(`코인이 ${JELLY_PRICE - coins}개 부족해요. 스테이지를 클리어해 모아 보세요!`);
+      return;
+    }
+    setCoins((value) => value - JELLY_PRICE);
+    setUnlocked((currentUnlocked) => {
+      const nextUnlocked = new Set(currentUnlocked).add(index);
+      if ([0, 1, 2, 3, 4, 5, 6].every((i) => nextUnlocked.has(i))) nextUnlocked.add(7);
+      return nextUnlocked;
+    });
+    setShopMessage(`${JELLIES[index].name}의 기록을 해금했어요!`);
+    setSelectedJelly(index);
+    setCollectionTab("story");
+    setObserving(false);
+    setDetailOpen(true);
+  };
+
+  const buyWeapon = (id: WeaponId) => {
+    const weapon = WEAPONS.find((w) => w.id === id)!;
+    // If no shot has been fired this round, the new weapon applies right away.
+    const applyNow = () =>
+      setShots((s) => (s === shotsFor(equippedRef.current) ? shotsFor(id) : s));
+    if (ownedWeapons.has(id)) {
+      applyNow();
+      setEquippedWeapon(id);
+      setShopMessage(`${weapon.name} 장착!`);
+      return;
+    }
+    if (coins < weapon.price) {
+      setShopMessage(`코인이 ${weapon.price - coins}개 부족해요.`);
+      return;
+    }
+    setCoins((value) => value - weapon.price);
+    setOwnedWeapons((current) => new Set(current).add(id));
+    applyNow();
+    setEquippedWeapon(id);
+    setShopMessage(`${weapon.name} 구매 완료! 바로 장착했어요.`);
+  };
+
+  const openShop = () => {
+    setPaused(false);
+    setView("shop");
+  };
+
   const openJelly = (index: number) => {
-    if (!unlocked.has(index)) return;
+    if (!unlocked.has(index)) {
+      buyJelly(index);
+      return;
+    }
     setSelectedJelly(index);
     setCollectionTab("profile");
     setObserving(false);
+    setDetailOpen(true);
+  };
+
+  const openCollection = () => {
+    setDetailOpen(false);
+    setView("collection");
   };
 
   const returnToGame = () => {
-    if (status === "won" && stage < 7) setStage((currentStage) => currentStage + 1);
-    restart();
+    if (status === "won") {
+      if (stage < 7) setStage((currentStage) => currentStage + 1);
+      restart();
+    }
     setView("game");
   };
 
@@ -628,7 +982,7 @@ export default function App() {
         <button
           className={`jelly-card ${jelly.special ? "special-jelly-card" : ""} ${selectedJelly === index && isUnlocked ? "selected" : ""} ${!isUnlocked ? "locked" : ""}`}
           onClick={() => openJelly(index)}
-          disabled={!isUnlocked}
+          disabled={!isUnlocked && jelly.special}
           key={jelly.name}
         >
           <span className="jelly-number">
@@ -636,53 +990,72 @@ export default function App() {
           </span>
           <div className="card-jelly">
             <img src={jelly.image} alt="" draggable={false} />
-            {!isUnlocked && <span className="lock-mark">?</span>}
+            {!isUnlocked && (
+              <span className="lock-mark" aria-label="잠김">
+                <svg viewBox="0 0 20 22" aria-hidden="true">
+                  <path
+                    d="M5 10V7a5 5 0 0 1 10 0v3"
+                    fill="none"
+                    stroke="#2d2752"
+                    strokeWidth="3"
+                  />
+                  <rect x="2" y="10" width="16" height="11" rx="2" fill="#2d2752" />
+                  <rect x="9" y="13" width="2" height="5" fill="#f6c445" />
+                </svg>
+              </span>
+            )}
           </div>
-          <strong>{isUnlocked ? jelly.name : "아직 모르는 젤리"}</strong>
-          <span className="unlock-cost">
-            {isUnlocked
-              ? "기록 열람"
-              : jelly.special
-                ? "기본 젤리 7종 수집"
-                : `STAGE 1-${index + 1} 클리어`}
-          </span>
+          <strong>{jelly.name}</strong>
+          {isUnlocked || jelly.special ? (
+            <span className="unlock-cost">{isUnlocked ? "기록 열람" : "기본 젤리 7종 수집"}</span>
+          ) : (
+            <span className={`unlock-cost buy-cost ${coins < JELLY_PRICE ? "too-poor" : ""}`}>
+              <span className="tiny-coin">J</span>
+              {JELLY_PRICE} 코인으로 해금
+            </span>
+          )}
         </button>
       );
     };
     return (
       <main className="collection-shell">
         <header className="collection-header">
-          <button className="back-button" onClick={returnToGame}>
-            <span aria-hidden="true">‹</span> 게임으로
+          <button
+            className="back-button"
+            onClick={detailOpen ? () => setDetailOpen(false) : returnToGame}
+          >
+            <span aria-hidden="true">‹</span> {detailOpen ? "목록으로" : "게임으로"}
           </button>
           <div>
             <small>보건실 비밀 기록</small>
             <h1>젤리 도감</h1>
           </div>
-          <div className="collection-coins collection-progress">
-            <BookIcon />
-            <span>수집</span>
-            <strong>
-              {unlocked.size}/{JELLIES.length}
-            </strong>
+          <div className="collection-coins">
+            <span className="coin">J</span>
+            <strong>{coins}</strong>
           </div>
         </header>
+        {shopMessage && <div className="shop-toast">{shopMessage}</div>}
 
-        <section className="collection-content">
-          <div className="collection-list" aria-label="젤리 목록">
-            <div className="collection-section-title">
-              <span>기본 젤리 (7종)</span>
+        <section className={`collection-content ${detailOpen ? "detail-only" : "list-only"}`}>
+          {!detailOpen && (
+            <div className="collection-list" aria-label="젤리 목록">
+              <div className="collection-section-title">
+                <span>
+                  기본 젤리 · 수집 {unlocked.size}/{JELLIES.length}
+                </span>
+              </div>
+              <div className="jelly-grid">{JELLIES.slice(0, 7).map(renderJellyCard)}</div>
+              <div className="collection-section-title special-title">
+                <span>특별 젤리</span>
+              </div>
+              <div className="special-jelly-grid">
+                {JELLIES.slice(7).map((jelly, index) => renderJellyCard(jelly, index + 7))}
+              </div>
             </div>
-            <div className="jelly-grid">{JELLIES.slice(0, 7).map(renderJellyCard)}</div>
-            <div className="collection-section-title special-title">
-              <span>특별 젤리</span>
-            </div>
-            <div className="special-jelly-grid">
-              {JELLIES.slice(7).map((jelly, index) => renderJellyCard(jelly, index + 7))}
-            </div>
-          </div>
+          )}
 
-          {selectedUnlocked ? (
+          {!detailOpen ? null : selectedUnlocked ? (
             <article className="story-book">
               <div className="story-tape" />
               <span className="story-label">EUN-YOUNG'S JELLY FILE</span>
@@ -780,7 +1153,7 @@ export default function App() {
                 </div>
               )}
               <div className="teacher-note">
-                <img src="/doctor.png" alt="" />
+                <img src="./doctor.png" alt="" />
                 <span>
                   “젤리는 무조건 없애는 게 아니야.
                   <br />
@@ -806,6 +1179,83 @@ export default function App() {
     );
   }
 
+  if (view === "shop") {
+    const equipped = WEAPONS.find((w) => w.id === equippedWeapon)!;
+    return (
+      <main className="collection-shell shop-shell">
+        <header className="collection-header">
+          <button className="back-button" onClick={() => setView("game")}>
+            <span aria-hidden="true">‹</span> 게임으로
+          </button>
+          <div>
+            <small>은영의 비밀 무기고</small>
+            <h1>무기 상점</h1>
+          </div>
+          <div className="collection-coins">
+            <span className="coin">J</span>
+            <strong>{coins}</strong>
+          </div>
+        </header>
+        {shopMessage && <div className="shop-toast">{shopMessage}</div>}
+
+        <section className="shop-content">
+          <div className="shop-hero paper-card">
+            <img src="./doctor.png" alt="보건교사 안은영" draggable={false} />
+            <div>
+              <span className="story-label">NOW EQUIPPED</span>
+              <div className="shop-equipped">
+                <span className="weapon-icon">
+                  <WeaponIcon id={equipped.id} />
+                </span>
+                <div>
+                  <strong>{equipped.name}</strong>
+                  <small>{equipped.effect}</small>
+                </div>
+              </div>
+              <p>“무기는 장난감처럼 보여도 괜찮아. 중요한 건 누가 쥐고 있느냐니까.”</p>
+            </div>
+          </div>
+
+          <div className="weapon-grid">
+            {WEAPONS.map((weapon) => {
+              const owned = ownedWeapons.has(weapon.id);
+              const isEquipped = equippedWeapon === weapon.id;
+              return (
+                <article
+                  key={weapon.id}
+                  className={`weapon-card ${isEquipped ? "equipped" : ""} ${owned ? "owned" : ""}`}
+                >
+                  <span className="weapon-icon">
+                    <WeaponIcon id={weapon.id} />
+                  </span>
+                  <strong>{weapon.name}</strong>
+                  <span className="weapon-effect">{weapon.effect}</span>
+                  <p>{weapon.description}</p>
+                  <button
+                    className={`weapon-buy ${!owned && coins < weapon.price ? "too-poor" : ""}`}
+                    onClick={() => buyWeapon(weapon.id)}
+                    disabled={isEquipped}
+                  >
+                    {isEquipped ? (
+                      "장착 중"
+                    ) : owned ? (
+                      "장착하기"
+                    ) : (
+                      <>
+                        <span className="tiny-coin">J</span>
+                        {weapon.price} 코인
+                      </>
+                    )}
+                  </button>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      </main>
+    );
+  }
+
   return (
     <main className="game-shell">
       <div className="sky-decor sky-star-one">✦</div>
@@ -821,18 +1271,21 @@ export default function App() {
           <strong>JELLY HUNT</strong>
           <span className="logo-spark">✦</span>
         </div>
-        <div className="stat-card stage-card">
+        <div
+          className={`stat-card stage-card ${stage === HARD_STAGE ? "hard-stage" : ""}`}
+          data-level={stage === HARD_STAGE ? "HARD" : "SUPER EASY"}
+        >
           <StarIcon />
           <span>
             <small>STAGE</small> 1-{stage}
           </span>
         </div>
-        <div className="stat-card coin-card">
+        <button className="stat-card coin-card shop-button" onClick={openShop}>
           <span className="coin">J</span>
-          <span>×</span>
           <strong>{coins}</strong>
-        </div>
-        <button className="collection-button" onClick={() => setView("collection")}>
+          <span className="shop-label">상점</span>
+        </button>
+        <button className="collection-button" onClick={openCollection}>
           <BookIcon />
           <span>젤리 도감</span>
           <b>
@@ -892,14 +1345,27 @@ export default function App() {
                     paused
                       ? () => setPaused(false)
                       : status === "won"
-                        ? () => setView("collection")
+                        ? stage < 7
+                          ? () => {
+                              setStage((currentStage) => currentStage + 1);
+                              restart();
+                            }
+                          : openCollection
                         : restart
                   }
                 >
-                  {paused ? "계속하기" : status === "won" ? "젤리 도감으로" : "다시 도전"}
+                  {paused
+                    ? "계속하기"
+                    : status === "won"
+                      ? stage < 7
+                        ? `STAGE 1-${stage + 1} 시작`
+                        : "젤리 도감으로"
+                      : "다시 도전"}
                 </button>
                 {status === "won" && (
-                  <span className="clear-reward">도감 기록 해금 · 클리어 보상 +30 코인</span>
+                  <span className="clear-reward">
+                    도감 기록 해금 · 클리어 보상 +{equippedWeapon === "sword" ? 60 : 30} 코인
+                  </span>
                 )}
               </div>
             </div>

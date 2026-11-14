@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/create-standalone.mjs",
     "preview": "vite preview",
     "format": "oxfmt"
   },
@@ -25,3 +25,4 @@
     "vite": "^8.0.5"
   }
 }
+

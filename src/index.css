@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Jua&family=Nunito:wght@700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Jua&family=Nunito:wght@700;800;900&family=Gowun+Dodum&family=Gaegu:wght@400;700&family=Silkscreen:wght@400;700&display=swap");
 @import "tailwindcss";
 
 @layer base {
@@ -17,6 +17,16 @@
 
   button {
     cursor: pointer;
+  }
+
+  /* 스크롤 기능은 유지하고 스크롤바만 숨김 */
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
   }
 }
 
@@ -230,7 +240,7 @@
   background: linear-gradient(120deg, #fffdf8, #fff4d2);
 }
 .stage-card::after {
-  content: "SUPER EASY";
+  content: attr(data-level);
   position: absolute;
   right: 8px;
   top: -11px;
@@ -243,6 +253,9 @@
     900 9px/1 "Nunito",
     sans-serif;
   letter-spacing: 0.6px;
+}
+.stage-card.hard-stage::after {
+  background: #d9443f;
 }
 .stage-card span small {
   display: block;
@@ -795,6 +808,21 @@
 }
 .collection-list {
   min-width: 0;
+}
+/* List first, story after a click: one panel at a time. */
+.collection-content.list-only,
+.collection-content.detail-only {
+  display: block;
+}
+.collection-content.list-only {
+  max-width: 1000px;
+}
+.collection-content.detail-only {
+  max-width: 820px;
+}
+.collection-content.detail-only .story-book {
+  position: relative;
+  top: 0;
 }
 .collection-section-title {
   display: flex;
@@ -1643,5 +1671,916 @@
   }
   .preview-glass {
     width: 105px;
+  }
+}
+
+/* ---------- Coin shop: topbar entry ---------- */
+.shop-button {
+  gap: 8px;
+  color: var(--ink);
+  cursor: pointer;
+}
+.shop-button .shop-label {
+  padding: 3px 8px;
+  border-radius: 9px;
+  color: #fff;
+  background: #ef729e;
+  font-size: 14px;
+}
+.shop-button:hover {
+  translate: 0 -2px;
+}
+@media (max-width: 1050px) {
+  .topbar {
+    grid-template-columns: minmax(200px, 1.3fr) minmax(125px, 0.75fr) minmax(110px, 0.6fr) minmax(
+        140px,
+        0.85fr
+      ) 64px;
+  }
+  .coin-card {
+    display: flex;
+  }
+  .coin-card .coin {
+    width: 30px;
+    border-width: 3px;
+  }
+}
+@media (max-width: 760px) {
+  .topbar {
+    grid-template-columns: 1fr 0.9fr 1.1fr 49px;
+  }
+  .teacher-badge {
+    grid-column: 1 / 5;
+  }
+  .coin-card {
+    height: 49px;
+    gap: 4px;
+    font-size: 14px;
+  }
+  .coin-card .coin {
+    width: 22px;
+    border-width: 2px;
+    box-shadow: none;
+    font-size: 11px;
+  }
+  .shop-button .shop-label {
+    padding: 2px 5px;
+    font-size: 11px;
+  }
+}
+
+/* ---------- Buying jellies ---------- */
+.buy-cost {
+  color: #8a5a12;
+  background: #fff1b8;
+  box-shadow: inset 0 0 0 2px #f0c654;
+}
+.buy-cost.too-poor {
+  color: #9b8fae;
+  background: #eee8f2;
+  box-shadow: none;
+}
+.jelly-card.locked:not(:disabled) {
+  cursor: pointer;
+}
+.shop-toast {
+  position: fixed;
+  z-index: 50;
+  left: 50%;
+  bottom: 28px;
+  translate: -50% 0;
+  max-width: calc(100% - 32px);
+  padding: 12px 20px;
+  border: 4px solid var(--ink);
+  border-radius: 16px;
+  color: var(--ink);
+  background: #fffdf5;
+  box-shadow: 0 6px 0 rgba(58, 51, 104, 0.3);
+  font-size: 17px;
+  text-align: center;
+  animation: toast-in 0.25s ease;
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    translate: -50% 12px;
+  }
+}
+
+/* ---------- Weapon shop screen ---------- */
+.shop-content {
+  max-width: 1100px;
+  margin: auto;
+  display: grid;
+  gap: 26px;
+}
+.shop-hero {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 24px;
+  align-items: center;
+  padding: 20px 28px;
+  border: 5px solid var(--ink);
+  border-radius: 24px;
+  background: #fffdf5;
+  box-shadow: 0 8px 0 rgba(58, 51, 104, 0.28);
+}
+.shop-hero img {
+  width: 150px;
+  height: 160px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.shop-hero p {
+  margin: 12px 0 0;
+  color: #6a619d;
+  font-size: 17px;
+}
+.shop-equipped {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 10px;
+}
+.shop-equipped strong {
+  display: block;
+  font-size: 26px;
+}
+.shop-equipped small {
+  color: #c2507e;
+  font-size: 16px;
+}
+.weapon-icon {
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: #dce9ff;
+  box-shadow: inset 0 0 0 5px #c0d0f0;
+}
+.weapon-icon svg {
+  width: 62px;
+  height: 62px;
+}
+.weapon-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+.weapon-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 14px 16px;
+  border: 5px solid #575083;
+  border-radius: 24px;
+  text-align: center;
+  background: #fffaf3;
+  box-shadow:
+    inset 0 0 0 4px #ead7ea,
+    0 7px 0 rgba(67, 58, 116, 0.28);
+}
+.weapon-card.equipped {
+  border-color: #f1c347;
+  box-shadow:
+    inset 0 0 0 5px #fff0a9,
+    0 8px 0 #a47e39;
+}
+.weapon-card > strong {
+  font-size: 20px;
+}
+.weapon-effect {
+  padding: 4px 10px;
+  border-radius: 10px;
+  color: #c2507e;
+  background: #ffe3ee;
+  font-size: 14px;
+}
+.weapon-card p {
+  flex: 1;
+  margin: 2px 0 6px;
+  color: #6f6690;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.weapon-buy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 10px;
+  border: 4px solid var(--ink);
+  border-radius: 14px;
+  color: #fff;
+  background: #7a63d0;
+  box-shadow: 0 5px 0 rgba(58, 51, 104, 0.3);
+  font-size: 17px;
+}
+.weapon-buy.too-poor {
+  color: #8f86a8;
+  background: #e5e0ef;
+}
+.weapon-buy:disabled {
+  cursor: default;
+  color: #8a5a12;
+  background: #fff1b8;
+}
+.weapon-buy:not(:disabled):hover {
+  translate: 0 -2px;
+}
+@media (max-width: 1050px) {
+  .weapon-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .shop-hero {
+    grid-template-columns: 90px 1fr;
+    gap: 14px;
+    padding: 14px;
+    border-width: 3px;
+  }
+  .shop-hero img {
+    width: 90px;
+    height: 100px;
+  }
+  .shop-equipped strong {
+    font-size: 20px;
+  }
+  .shop-hero .weapon-icon {
+    display: none;
+  }
+  .weapon-grid {
+    gap: 12px;
+  }
+  .weapon-card {
+    padding: 14px 10px 12px;
+    border-width: 3px;
+  }
+}
+
+/* =====================================================================
+   DESIGN PASS — "보건실 기록부"
+   One visual language for every screen: stationery from a school
+   infirmary (index cards, clipboards, folder tabs, stamps) drawn with
+   hard pixel shadows so the UI matches the pixel-art sprites.
+   ===================================================================== */
+.game-shell,
+.collection-shell {
+  --ink: #2d2752;
+  --ink-soft: #5d5683;
+  --paper: #fffaf0;
+  --paper-shade: #f3ebdb;
+  --rule: rgba(84, 120, 190, 0.16);
+  --margin-red: rgba(232, 96, 120, 0.55);
+  --pink: #f2779f;
+  --mint: #7fd1b9;
+  --amber: #f6c445;
+  --hard: 4px 4px 0 var(--ink);
+  --hard-soft: 5px 5px 0 rgba(45, 39, 82, 0.28);
+  --label: "Silkscreen", "Nunito", sans-serif;
+  --read: "Gowun Dodum", "Jua", sans-serif;
+  --hand: "Gaegu", "Jua", cursive;
+}
+
+/* ---------- Shared building blocks ---------- */
+.teacher-badge,
+.stat-card,
+.collection-button,
+.pause-button,
+.back-button,
+.collection-coins {
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: var(--hard);
+  transition:
+    translate 0.12s ease,
+    box-shadow 0.12s ease;
+}
+.collection-button:hover,
+.shop-button:hover,
+.pause-button:hover,
+.back-button:hover {
+  translate: -1px -1px;
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.collection-button:active,
+.shop-button:active,
+.pause-button:active,
+.back-button:active {
+  translate: 3px 3px;
+  box-shadow: 1px 1px 0 var(--ink);
+}
+.paper-card {
+  border: 3px solid var(--ink);
+  background: var(--paper);
+  box-shadow: var(--hard-soft);
+}
+
+/* ---------- Game screen: dusk over the school ---------- */
+.game-shell {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px) 0 0 / 100% 4px,
+    linear-gradient(180deg, #a9a3ec 0%, #c3b3ef 38%, #e9bfdc 70%, #f7d6cf 100%);
+}
+.sky-star-two {
+  display: none;
+}
+.sky-decor {
+  font-size: 26px;
+  color: #fff3b0;
+  text-shadow: 2px 2px 0 rgba(45, 39, 82, 0.45);
+}
+.topbar::before {
+  display: none;
+}
+.teacher-badge {
+  background:
+    linear-gradient(90deg, var(--mint) 0 8px, transparent 8px),
+    var(--paper);
+}
+.teacher-badge small {
+  color: var(--ink-soft);
+}
+.stat-card {
+  background: var(--paper);
+  font-family: var(--label);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.stage-card span small {
+  font-family: var(--label);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--ink-soft);
+}
+.stage-card::after {
+  border-width: 2px;
+  border-radius: 4px;
+  font-family: var(--label);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 1px;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.coin-card {
+  background: var(--paper);
+}
+.coin {
+  border-color: #a6782a;
+  box-shadow: inset 0 0 0 3px #fff1a1;
+  font-family: var(--label);
+}
+.shop-button .shop-label {
+  border-radius: 4px;
+  font-family: var(--read);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.collection-button {
+  background: var(--paper);
+}
+.collection-button b {
+  font-family: var(--label);
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+.pause-button {
+  background: var(--paper);
+}
+.side-caption {
+  font-family: var(--label);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(45, 39, 82, 0.55);
+}
+
+/* Board: a framed window onto the playfield */
+.board-wrap {
+  border: 6px solid var(--ink);
+  border-radius: 16px 16px 6px 6px;
+  box-shadow: 8px 8px 0 rgba(45, 39, 82, 0.3);
+}
+.board-wrap::before {
+  inset: 8px;
+  border: 2px dashed rgba(255, 255, 255, 0.16);
+  border-radius: 9px;
+}
+
+/* Shots left: a real index card (red margin line + blue rules) */
+.shots-note {
+  border-radius: 3px;
+  background:
+    linear-gradient(var(--margin-red), var(--margin-red)) 0 34px / 100% 2px no-repeat,
+    repeating-linear-gradient(transparent 0 27px, var(--rule) 27px 29px) 0 36px / 100%
+      calc(100% - 36px) no-repeat,
+    var(--paper);
+}
+.shots-note small {
+  font-family: var(--read);
+  color: var(--ink-soft);
+  font-size: clamp(15px, 1.25vw, 19px);
+}
+.shots-note strong {
+  font-family: var(--label);
+  font-weight: 700;
+  font-size: 72px;
+  letter-spacing: -2px;
+}
+.shots-note::before,
+.shots-note::after {
+  background: var(--ink-soft);
+  box-shadow:
+    0 35px var(--ink-soft),
+    0 70px var(--ink-soft),
+    0 105px var(--ink-soft),
+    0 140px var(--ink-soft);
+}
+.doctor {
+  filter: drop-shadow(5px 5px 0 rgba(45, 39, 82, 0.2));
+}
+
+/* Combo: a round sticker */
+.combo-card {
+  width: 78%;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 50%;
+  aspect-ratio: 1.3;
+  min-height: 0;
+  display: grid;
+  place-content: center;
+  border-style: dashed;
+  outline: 3px solid var(--paper);
+  outline-offset: -9px;
+  background: #fff3c4;
+  transform: rotate(-4deg);
+}
+.combo-card span {
+  font-size: clamp(20px, 1.9vw, 28px);
+  color: var(--ink-soft);
+}
+.combo-card strong {
+  font-family: var(--label);
+  font-weight: 700;
+  font-size: clamp(36px, 3.4vw, 52px);
+}
+
+/* Mission: a clipboard */
+.mission-card {
+  border-radius: 6px;
+  padding-top: 30px;
+  background:
+    repeating-linear-gradient(transparent 0 31px, var(--rule) 31px 33px) 0 74px / 100%
+      calc(100% - 74px) no-repeat,
+    var(--paper);
+}
+.mission-card::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  translate: -50% 0;
+  width: 78px;
+  height: 22px;
+  border: 3px solid var(--ink);
+  border-radius: 6px 6px 3px 3px;
+  background: #b9b3c9;
+  box-shadow: inset 0 -5px 0 #8e87a6;
+}
+.mission-title {
+  border-bottom: 2px solid var(--margin-red);
+}
+.mission-card p {
+  font-family: var(--hand);
+  font-weight: 700;
+  font-size: clamp(24px, 2.2vw, 32px);
+  line-height: 1.25;
+  color: #3b3570;
+}
+.next-bubble > span {
+  border-width: 3px;
+  border-radius: 6px;
+  box-shadow: 3px 3px 0 var(--ink);
+  font-size: 19px;
+}
+.preview-glass {
+  outline-color: var(--ink);
+  outline-width: 4px;
+  box-shadow:
+    inset 0 0 0 6px #adc4f2,
+    6px 6px 0 rgba(45, 39, 82, 0.28);
+}
+.help-text {
+  border-radius: 6px;
+  background: rgba(45, 39, 82, 0.82);
+  font-family: var(--read);
+  font-size: 13px;
+}
+
+/* Result card */
+.game-overlay {
+  background: rgba(45, 39, 82, 0.55);
+  backdrop-filter: blur(2px);
+}
+.overlay-card {
+  border: 4px solid var(--ink);
+  border-radius: 10px;
+  background:
+    linear-gradient(var(--margin-red), var(--margin-red)) 0 58px / 100% 2px no-repeat,
+    var(--paper);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+.overlay-card p {
+  font-family: var(--read);
+  color: var(--ink-soft);
+  font-size: 16px;
+}
+.overlay-card button {
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  background: #6f5fd0;
+  box-shadow: var(--hard);
+}
+.overlay-card button:hover {
+  translate: -1px -1px;
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.overlay-card button:active {
+  translate: 3px 3px;
+  box-shadow: 1px 1px 0 var(--ink);
+}
+.clear-reward {
+  font-family: var(--read);
+  font-size: 14px;
+}
+
+/* ---------- Collection & shop: notebook paper on the desk ---------- */
+.collection-shell {
+  background:
+    radial-gradient(rgba(45, 39, 82, 0.13) 1.2px, transparent 1.4px) 0 0 / 22px 22px,
+    linear-gradient(180deg, #ddd6f6, #cfc8f1 60%, #e6cde6);
+}
+.collection-header small {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--read);
+  color: var(--ink-soft);
+}
+.collection-header h1 {
+  display: inline-block;
+  padding: 0 10px;
+  text-shadow: none;
+  background: linear-gradient(transparent 62%, rgba(242, 119, 159, 0.4) 62% 92%, transparent 92%);
+}
+.back-button,
+.collection-coins {
+  background: var(--paper);
+}
+.collection-coins strong {
+  font-family: var(--label);
+  font-weight: 700;
+}
+.collection-section-title {
+  font-family: var(--read);
+  font-size: 17px;
+  color: var(--ink-soft);
+}
+.collection-section-title::before,
+.collection-section-title::after {
+  height: 2px;
+  background: rgba(45, 39, 82, 0.25);
+  box-shadow: none;
+}
+.collection-section-title span {
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: var(--paper);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.collection-content.list-only {
+  max-width: 1120px;
+}
+@media (min-width: 1200px) {
+  .list-only .jelly-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Jelly cards: hand-placed index cards */
+.jelly-card {
+  border: 3px solid var(--ink);
+  border-radius: 4px;
+  background:
+    linear-gradient(var(--margin-red), var(--margin-red)) 0 36px / 100% 2px no-repeat,
+    var(--paper);
+  box-shadow: var(--hard-soft);
+}
+.jelly-grid .jelly-card:nth-child(odd) {
+  rotate: -0.7deg;
+}
+.jelly-grid .jelly-card:nth-child(3n) {
+  rotate: 0.8deg;
+}
+.jelly-card:hover {
+  rotate: 0deg;
+  translate: 0 -4px;
+  box-shadow: 7px 9px 0 rgba(45, 39, 82, 0.28);
+}
+.jelly-card.selected {
+  border-color: var(--ink);
+  box-shadow: var(--hard-soft);
+}
+.jelly-number {
+  top: 13px;
+  font-family: var(--label);
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--ink-soft);
+}
+.card-jelly {
+  margin-top: 26px;
+  background: #e3ecfb;
+  box-shadow: inset 0 0 0 3px rgba(45, 39, 82, 0.12);
+}
+.jelly-card > strong {
+  font-size: 18px;
+}
+.unlock-cost {
+  border-radius: 4px;
+  font-family: var(--read);
+  font-size: 12px;
+}
+.buy-cost {
+  color: #6b4610;
+  background: #ffe9a3;
+  box-shadow: none;
+  border: 2px dashed #b88a2c;
+}
+.buy-cost.too-poor {
+  border-color: rgba(45, 39, 82, 0.25);
+}
+
+/* Locked: the jelly stays in full colour, only a padlock marks it */
+.jelly-card.locked {
+  filter: none;
+  background:
+    linear-gradient(var(--margin-red), var(--margin-red)) 0 36px / 100% 2px no-repeat,
+    var(--paper-shade);
+}
+.jelly-card.locked .lock-mark {
+  right: -4px;
+  bottom: -4px;
+  width: 38px;
+  height: 38px;
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  background: var(--amber);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.jelly-card.locked .lock-mark svg {
+  width: 20px;
+  height: 22px;
+}
+.jelly-card:disabled {
+  opacity: 0.85;
+}
+
+/* Special card */
+.special-jelly-card {
+  border-radius: 6px;
+}
+.special-jelly-card .card-jelly {
+  margin: 0;
+}
+
+/* Story file */
+.story-book {
+  border: 4px solid var(--ink);
+  border-radius: 6px;
+  box-shadow: 8px 8px 0 rgba(45, 39, 82, 0.3);
+  background:
+    linear-gradient(90deg, transparent 46px, var(--margin-red) 46px 48px, transparent 48px),
+    repeating-linear-gradient(transparent 0 34px, var(--rule) 34px 36px),
+    var(--paper);
+}
+.story-label,
+.story-book > small,
+.secret-record > span {
+  font-family: var(--label);
+  font-weight: 400;
+  letter-spacing: 2px;
+}
+.story-jelly {
+  border-width: 6px;
+  outline: 3px solid var(--ink);
+}
+.story-book h3 {
+  font-family: var(--read);
+  color: var(--ink-soft);
+}
+.story-tabs {
+  gap: 4px;
+  border-bottom: 3px solid var(--ink);
+}
+.story-tabs button {
+  border: 3px solid var(--ink);
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+  color: var(--ink-soft);
+  background: var(--paper-shade);
+  font-family: var(--read);
+  font-size: 14px;
+}
+.story-tabs button.active {
+  border-color: var(--ink);
+  color: var(--ink);
+  background: #ffd6e5;
+  box-shadow: none;
+}
+.story-book > p,
+.episode-story > p,
+.jelly-profile dd,
+.observe-panel p,
+.secret-record p {
+  font-family: var(--read);
+}
+.episode-story > p {
+  font-size: 17px;
+  line-height: 1.9;
+}
+.episode-story blockquote {
+  border-left-color: var(--pink);
+  border-radius: 0 6px 6px 0;
+  font-family: var(--hand);
+  font-size: 21px;
+  font-style: normal;
+  line-height: 1.35;
+}
+.jelly-profile dt {
+  font-family: var(--read);
+  color: var(--ink-soft);
+}
+.observe-panel,
+.secret-record {
+  border: 2px solid rgba(45, 39, 82, 0.3);
+  border-radius: 6px;
+}
+.observe-panel button {
+  border-radius: 8px;
+  box-shadow: var(--hard);
+}
+.teacher-note {
+  border: 2px dashed rgba(45, 39, 82, 0.25);
+  border-radius: 6px;
+  background: #fff3c4;
+  rotate: -0.6deg;
+  font-family: var(--hand);
+  font-size: 19px;
+  line-height: 1.2;
+  color: #3b3570;
+}
+
+/* Toast */
+.shop-toast {
+  border-width: 3px;
+  border-radius: 8px;
+  box-shadow: var(--hard);
+  font-family: var(--read);
+  font-size: 16px;
+}
+
+/* Shop: inventory tags */
+.shop-hero {
+  border: 3px solid var(--ink);
+  border-radius: 6px;
+  box-shadow: 6px 6px 0 rgba(45, 39, 82, 0.28);
+  background:
+    linear-gradient(90deg, var(--mint) 0 10px, transparent 10px),
+    var(--paper);
+}
+.shop-hero p {
+  font-family: var(--hand);
+  font-size: 21px;
+  line-height: 1.25;
+  color: #3b3570;
+}
+.shop-equipped small,
+.weapon-effect {
+  font-family: var(--read);
+}
+.weapon-card {
+  position: relative;
+  padding-top: 32px;
+  border: 3px solid var(--ink);
+  border-radius: 6px 6px 14px 14px;
+  background: var(--paper);
+  box-shadow: var(--hard-soft);
+}
+.weapon-card::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  translate: -50% 0;
+  width: 14px;
+  height: 14px;
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  background: #cfc8f1;
+}
+.weapon-card:nth-child(even) {
+  rotate: 0.6deg;
+}
+.weapon-card:nth-child(odd) {
+  rotate: -0.5deg;
+}
+.weapon-card.equipped {
+  border-color: var(--ink);
+  background:
+    linear-gradient(var(--mint), var(--mint)) 0 0 / 100% 6px no-repeat,
+    var(--paper);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+.weapon-icon {
+  background: #e3ecfb;
+  box-shadow: inset 0 0 0 3px rgba(45, 39, 82, 0.12);
+}
+.weapon-effect {
+  border-radius: 4px;
+}
+.weapon-card p {
+  font-family: var(--read);
+  color: var(--ink-soft);
+}
+.weapon-buy {
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  background: #6f5fd0;
+  box-shadow: var(--hard);
+  font-family: var(--read);
+}
+.weapon-buy:not(:disabled):hover {
+  translate: -1px -1px;
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.weapon-buy:not(:disabled):active {
+  translate: 3px 3px;
+  box-shadow: 1px 1px 0 var(--ink);
+}
+.weapon-buy:disabled {
+  background: #d9f3ea;
+  color: #2f6b58;
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jelly-card,
+  .weapon-card,
+  .teacher-note {
+    rotate: 0deg !important;
+  }
+}
+
+/* Phone sizes: the design pass above must not override the compact layout */
+@media (max-width: 760px) {
+  .stat-card {
+    font-size: 13px;
+    letter-spacing: 0;
+  }
+  .stage-card::after {
+    font-size: 8px;
+    top: -9px;
+  }
+  .shop-button .shop-label {
+    display: none;
+  }
+  .collection-button span {
+    white-space: nowrap;
+    font-size: 14px;
+  }
+  .shots-note small {
+    font-size: 11px;
+  }
+  .shots-note strong {
+    font-size: 30px;
+    letter-spacing: 0;
+  }
+  .combo-card {
+    width: 88px;
+    aspect-ratio: auto;
+    min-height: 68px;
+    outline: none;
+    transform: rotate(-3deg);
+  }
+  .combo-card span {
+    font-size: 15px;
+  }
+  .combo-card strong {
+    font-size: 24px;
   }
 }
