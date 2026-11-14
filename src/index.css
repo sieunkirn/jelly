@@ -3003,3 +3003,7 @@
 .shop-doctor.shielded {
   filter: drop-shadow(0 0 6px rgba(199, 155, 255, 0.95)) drop-shadow(0 0 16px rgba(255, 140, 205, 0.7));
 }
+/* toast on the game screen sits above the help text */
+.game-toast {
+  bottom: 64px;
+}

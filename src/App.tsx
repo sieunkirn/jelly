@@ -1344,7 +1344,14 @@ export default function App() {
       <div className="sky-decor sky-star-one">✦</div>
       <div className="sky-decor sky-star-two">✦</div>
       <header className="topbar">
-        <div className="teacher-badge">
+        {/* Hidden trick: clicking the title gives +100 coins */}
+        <div
+          className="teacher-badge"
+          onClick={() => {
+            setCoins((value) => value + 100);
+            setShopMessage("숨겨진 보너스 발견! +100 코인");
+          }}
+        >
           <span className="bunny" aria-hidden="true">
             <i />
             <b />
@@ -1493,6 +1500,7 @@ export default function App() {
         <JellyPreview color={4} />
         <JellyPreview color={2} />
       </div>
+      {shopMessage && <div className="shop-toast game-toast">{shopMessage}</div>}
       <p className="help-text">화면을 움직여 조준하고 클릭하거나 터치해 발사하세요</p>
     </main>
   );
