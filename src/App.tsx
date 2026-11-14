@@ -11,6 +11,7 @@ type Bubble = {
 
 type GameStatus = "playing" | "won" | "lost";
 type View = "game" | "collection";
+type CollectionTab = "profile" | "story" | "observe" | "secret";
 
 const W = 720;
 const H = 720;
@@ -31,77 +32,117 @@ const FACES = [
 ];
 const JELLIES = [
   {
-    name: "움벌레 젤리",
+    name: "옴벌레 젤리",
+    title: "작고 성가신 마음",
     color: 0,
-    cost: 0,
     image: "/jellies/bug.png",
-    trait: "움직이고 싶지만 용기가 없었던 젤리",
+    emotion: "집착과 질투",
+    motif: "전학생 옴 / 럭키, 혼란",
+    location: "본관 2층 신발장 앞",
+    personality: "끈질기고 성가시지만 쉽게 외로워진다.",
+    record: "은영의 신발 끝에 매달린 채 17분 동안 떨어지지 않았다.",
     story:
-      "움벌레 젤리는 새로운 곳에 가고 싶었지만 실수할까 봐 늘 같은 자리만 맴돌았어요. 마음속에 쌓인 답답함이 빨간 더듬이로 자라 결국 젤리가 되었답니다. 작은 한 걸음에도 응원을 보내주면 누구보다 씩씩하게 앞으로 나아가요.",
+      "처음에는 그저 작은 벌레 한 마리였다.\n\n누군가의 뒤를 졸졸 따라다니고, 누군가가 웃으면 같이 웃었다. 하지만 어느 순간부터 자신을 바라봐 주지 않는 사람들을 견딜 수 없게 되었다.\n\n한 번만 더 봐줘. 조금만 더 신경 써줘.\n\n그 마음은 점점 부풀어 올라 작은 다리와 더듬이를 가진 붉은 젤리가 되었다.\n\n은영은 녀석을 없애려다 잠시 멈췄다. 녀석은 공격하는 대신 은영의 신발 끝에 매달려 떨어지지 않으려고 했다.\n\n“아, 진짜 귀찮게 하네.”\n\n은영은 한숨을 쉬고 녀석을 떼어냈다.",
+    lastLine: "누군가를 좋아하는 마음이 반드시 예쁜 모양으로 남는 건 아니다.",
   },
   {
     name: "문어 젤리",
+    title: "여덟 개의 손",
     color: 1,
-    cost: 20,
     image: "/jellies/octopus.png",
-    trait: "너무 많은 일을 한꺼번에 안았던 젤리",
+    emotion: "그리움과 미련",
+    motif: "토요일의 데이트메이트",
+    location: "토요일 오후의 빈 놀이터",
+    personality: "오래 기다리고, 한번 잡은 것은 좀처럼 놓지 않는다.",
+    record: "낡은 그네를 여덟 다리로 붙잡고 같은 토요일을 반복하고 있었다.",
     story:
-      "문어 젤리는 모든 부탁을 혼자 해결하려고 여덟 손을 쉴 새 없이 움직였어요. 어느 날 너무 많은 일을 꼭 끌어안은 채 말랑한 젤리가 되었죠. 이제는 힘들 때 도움을 청하는 것도 용기라는 걸 배우고 있어요.",
+      "토요일 오후, 놀이터에는 아무도 없었다.\n\n그런데 미끄럼틀 아래에서 주황색 무언가가 꿈틀거렸다.\n\n문어 젤리는 여덟 개의 다리로 낡은 그네를 붙잡고 있었다. 누군가 자신을 밀어주기를 기다리는 것처럼.\n\n예전에 이곳에서 만났던 사람을 기억하고 있었다. 약속했던 토요일도, 함께 먹었던 아이스크림도, 끝내 하지 못한 인사도.\n\n시간은 흘렀지만 문어 젤리에게 토요일은 아직 끝나지 않았다.\n\n은영이 다가가자 문어는 다리 하나를 내밀었다. 악수를 청하는 것 같았다. 은영은 잠시 그 손을 잡아주었다.\n\n그제야 그네가 천천히 멈췄다.",
+    lastLine: "기다림이 길어지면, 기억도 그 자리에 눌러앉는다.",
   },
   {
     name: "두꺼비 젤리",
+    title: "행운을 삼킨 아이",
     color: 2,
-    cost: 25,
     image: "/jellies/toad.png",
-    trait: "속상한 말을 꿀꺽 삼켰던 젤리",
+    emotion: "욕심과 행운",
+    motif: "럭키, 혼란",
+    location: "소원이 가장 많이 오가는 시험 기간의 교실",
+    personality: "반짝이는 소원을 좋아하고 무엇이든 삼키려 한다.",
+    record: "삼킨 소원이 너무 많아지자 등에 난 혹이 불규칙하게 빛나기 시작했다.",
     story:
-      "두꺼비 젤리는 속상한 일이 생겨도 괜찮은 척 모두 삼켜버렸어요. 참아온 마음이 배 속에서 노랗게 부풀어 젤리가 되었답니다. 안전한 곳에서 솔직한 기분을 말하면 몸도 마음도 다시 가벼워져요.",
+      "두꺼비 젤리는 행운을 좋아했다.\n\n시험을 잘 보게 해달라고, 좋아하는 사람과 짝이 되게 해달라고, 내일은 조금 더 행복하게 해달라고.\n\n사람들의 작은 소원을 하나씩 삼킬 때마다 몸집은 커졌고, 등에 달린 혹은 반짝반짝 빛났다.\n\n하지만 행운을 삼킨 사람들은 점점 더 많은 행운을 원했다. 한 번의 행운으로는 만족할 수 없었고, 두 번의 행운은 세 번의 불안을 만들었다.\n\n결국 두꺼비 젤리는 자신이 삼킨 소원들을 모두 토해내기 시작했다.\n\n은영은 그 앞에서 장난감 총을 내려놓았다.\n\n“행운도 적당히 먹어야지. 체하겠다.”",
+    lastLine: "행운을 너무 많이 삼키면, 자기 소원조차 기억나지 않는다.",
   },
   {
     name: "이끼 젤리",
+    title: "아무도 모르는 자리",
     color: 3,
-    cost: 30,
     image: "/jellies/moss.png",
-    trait: "아무도 모르게 조용히 숨었던 젤리",
+    emotion: "고립과 외로움",
+    motif: "오리 선생 한아름",
+    location: "햇빛이 들지 않는 구관 계단과 창고",
+    personality: "말이 없고 느리지만 잊힌 것들의 온기를 기억한다.",
+    record: "오래된 책상, 지워진 낙서, 명찰 없는 사물함 위에서 동시에 발견됐다.",
     story:
-      "이끼 젤리는 눈에 띄면 놀림받을까 봐 교실의 가장 조용한 구석에 숨곤 했어요. 너무 오래 웅크리고 있어 머리에 초록 이끼가 자라 젤리가 되었죠. 먼저 다정하게 인사해 주면 수줍은 미소를 보여줘요.",
+      "오래된 학교 구석에는 이끼 젤리가 살고 있었다.\n\n아무도 찾아오지 않는 창고, 오래된 책상 아래, 햇빛이 들지 않는 계단 옆. 이끼 젤리는 그곳에 붙어 조용히 자랐다.\n\n처음에는 누군가 자신을 발견해 주기를 바랐다. 하지만 아무도 오지 않았다. 그러자 점점 더 많은 곳에 뿌리를 내리기 시작했다.\n\n학교의 구석구석이 초록색으로 뒤덮였다.\n\n은영은 녀석을 떼어내려 했지만, 이끼 젤리가 붙어 있는 곳마다 작은 온기가 남아 있었다. 누군가 버리고 간 물건, 오래된 낙서, 잊힌 이름들.\n\n은영은 녀석을 전부 없애지 않았다. 대신 햇빛이 드는 창가로 옮겨주었다.",
+    lastLine: "아무도 찾지 않는다고 해서, 그곳에 아무것도 없는 건 아니다.",
   },
   {
     name: "두발 젤리",
+    title: "어디로든 도망치는 아이",
     color: 4,
-    cost: 35,
     image: "/jellies/twoleg.png",
-    trait: "엉킨 생각을 풀지 못했던 젤리",
+    emotion: "불안과 두려움",
+    motif: "원어민 교사 매켄지",
+    location: "수업이 끝난 뒤의 긴 복도",
+    personality: "조그만 소리에도 놀라며 멈추는 법을 모른다.",
+    record: "복도를 43바퀴 달렸지만 처음 발견된 자리에서 한 걸음도 벗어나지 못했다.",
     story:
-      "두발 젤리는 걱정이 생길 때마다 생각의 실타래를 머리에 감아두었어요. 파란 머리카락이 잔뜩 엉키며 결국 젤리가 되었답니다. 하나씩 천천히 이야기를 나누면 복잡한 생각도 부드럽게 풀려요.",
+      "두발 젤리는 항상 뛰어다녔다.\n\n두 개의 다리로는 부족해서 여러 개의 다리를 만들었다. 빨리 도망치기 위해서였다.\n\n누군가 자신을 잡으러 오는 것 같았고, 어디에 있든 안전하지 않다고 느꼈다. 복도를 달리고, 계단을 뛰어내리고, 교실 사이를 헤집었다.\n\n그런데 이상하게도 아무리 달려도 제자리였다.\n\n은영은 젤리를 쫓아가다가 결국 복도 한가운데 주저앉았다.\n\n“야. 나도 힘들거든?”\n\n그제야 두발 젤리가 멈췄다. 은영은 녀석이 도망치던 방향을 바라보았다. 아무도 없었다. 쫓아오는 것도 없었다. 그저 오래전부터 혼자 겁을 먹고 있었을 뿐이었다.",
+    lastLine: "도망치는 것도 습관이 되면, 멈추는 법을 잊는다.",
   },
   {
     name: "해파리 젤리",
+    title: "투명한 마음",
     color: 6,
-    cost: 40,
     image: "/jellies/jellyfish.png",
-    trait: "마음 가는 곳을 찾지 못했던 젤리",
+    emotion: "사랑과 동경",
+    motif: "사랑해 젤리피시",
+    location: "해 질 무렵의 과학실 창가",
+    personality: "수줍고 투명하다. 시선이 닿으면 보랏빛으로 흔들린다.",
+    record: "공격성은 없었다. 특정 이름을 들을 때마다 촉수가 아주 조금 움직였다.",
     story:
-      "해파리 젤리는 친구들의 의견에 떠밀려 언제나 다른 사람이 가는 곳만 따라갔어요. 자신이 좋아하는 것을 잊고 둥둥 떠다니다 보랏빛 젤리가 되었죠. 스스로 선택할 시간을 주면 반짝이는 길을 찾아가요.",
+      "해파리 젤리는 학교에서 가장 투명한 젤리였다.\n\n빛을 받으면 보랏빛으로 반짝였고, 가까이 다가가면 희미하게 흔들렸다.\n\n녀석은 누군가를 좋아하는 마음에서 태어났다. 처음에는 그저 멀리서 바라보는 것만으로도 행복했다. 같은 교실에 있는 것, 복도에서 마주치는 것, 이름을 한 번 불러보는 것만으로도 충분했다.\n\n하지만 그 마음을 들킬까 봐 두려웠다. 그래서 점점 투명해졌다. 아무도 자신을 알아보지 못하도록.\n\n은영은 해파리 젤리를 발견하고도 공격하지 않았다.\n\n“좋아하는 건 죄가 아닌데.”\n\n해파리의 촉수가 아주 조금 흔들렸다.",
+    lastLine: "보이지 않는다고 해서, 마음까지 없는 것은 아니다.",
   },
   {
     name: "하트 젤리",
+    title: "남겨진 온기",
     color: 5,
-    cost: 45,
     image: "/jellies/heart.png",
-    trait: "모두에게 사랑받고 싶었던 젤리",
+    emotion: "애정과 상실",
+    motif: "가로등 아래 김강선",
+    location: "매일 같은 시간, 운동장 끝의 오래된 가로등 아래",
+    personality: "조용하고 따뜻하다. 기다림을 방해하면 잠시 흐려진다.",
+    record: "퇴치가 필요하지 않은 젤리. 은영은 그날 장난감 총을 꺼내지 않았다.",
     story:
-      "하트 젤리는 모두에게 사랑받으려고 싫은 부탁도 거절하지 못했어요. 다른 사람의 마음만 챙기다 자신의 마음이 분홍 하트 젤리가 되었답니다. 이제는 나를 먼저 사랑하는 방법을 연습하고 있어요.",
+      "하트 젤리는 다른 젤리들과 달랐다.\n\n누군가를 해치지도 않았고, 학교를 어지럽히지도 않았다. 그저 어두운 가로등 아래에서 조용히 빛났다.\n\n하트 젤리에게는 오래된 기억이 있었다. 함께 웃었던 사람, 아무렇지 않게 건넸던 인사, 다시는 돌아오지 않을 평범한 하루.\n\n그 사람은 이제 이곳에 없었다.\n\n그런데도 하트 젤리는 매일 같은 시간에 나타났다. 누군가를 기다리는 것처럼.\n\n은영은 그 모습을 한참 바라보았다. 가끔은 퇴치해야 하는 것보다 그냥 곁에 있어 줘야 하는 것이 더 많았다.\n\n“오늘은 여기까지만 하자.”\n\n하트 젤리는 마지막으로 한 번 반짝이고 사라졌다.",
+    lastLine: "사라진 사람의 자리에도, 사랑했던 마음은 남는다.",
   },
   {
     name: "흰수염고래 젤리",
+    title: "바다보다 깊은 기억",
     color: 4,
-    cost: 90,
     image: "/jellies/whale.png",
-    trait: "깊은 외로움을 노래로 숨긴 특별 젤리",
+    emotion: "기억과 공존",
+    motif: "돌풍 속에 우리 둘이 안고 있었지 / 학교에 숨겨진 오래된 힘",
+    location: "학교 지하실 아래, 존재하지 않는 바다",
+    personality: "느리고 거대하며 공격하지 않는다. 수많은 목소리를 품고 있다.",
+    record: "단일한 욕망이 아니라 학교에 쌓인 기억과 감정이 함께 만든 존재로 추정된다.",
     special: true,
     story:
-      "흰수염고래 젤리는 아주 넓은 바다에서 자신의 노래를 들어줄 친구를 오랫동안 기다렸어요. 외로운 노래가 파도에 녹아 거대한 젤리가 되었답니다. 조용히 곁에서 끝까지 이야기를 들어주면 세상에서 가장 따뜻한 노래를 들려줘요.",
+      "아주 오래전부터 학교에는 이상한 소문이 있었다. 학교 아래에는 바다가 있다는 소문이었다.\n\n아무도 믿지 않았다. 학교는 바다에서 한참 떨어져 있었고, 지하실에는 오래된 창고와 먼지 쌓인 물건들만 있었으니까.\n\n그런데 어느 날부터 학교 곳곳에서 물방울이 발견되기 시작했다. 복도에는 파도 소리가 들렸고, 창문에는 바다에서나 볼 법한 푸른 빛이 일렁였다.\n\n그리고 지하실에서 거대한 고래 한 마리가 나타났다.\n\n흰수염고래 젤리는 다른 젤리들과 달리 누구의 욕망 하나만으로 만들어진 존재가 아니었다. 오랜 시간 학교에 쌓인 수많은 기억과 감정, 바람과 후회가 한데 모여 만들어진 존재였다.\n\n은영은 고래를 향해 무지개 칼을 겨누었다. 하지만 고래는 공격하지 않았다. 그저 아주 천천히, 깊은 바다를 헤엄치듯 은영의 곁을 지나갔다.\n\n그 순간 은영은 알았다. 이 젤리는 없애야 하는 존재가 아니라, 오랫동안 누군가가 기억해 주기를 기다렸던 존재라는 것을.",
+    lastLine: "세상에는 퇴치할 수 없는 마음도 있다. 그저 함께 헤엄쳐야 하는 마음도.",
   },
 ];
 
@@ -110,10 +151,11 @@ const cellCenter = (row: number, col: number) => ({
   y: 52 + row * Y_GAP,
 });
 
-function initialBubbles() {
+function initialBubbles(stage = 1) {
   const bubbles: Bubble[] = [];
   let id = 1;
-  for (let row = 0; row < 5; row++) {
+  const stageRows = Math.min(5 + Math.floor((stage - 1) / 3), 7);
+  for (let row = 0; row < stageRows; row++) {
     const count = row % 2 ? 10 : 11;
     for (let col = 0; col < count; col++) {
       const { x, y } = cellCenter(row, col);
@@ -180,10 +222,13 @@ export default function App() {
   const [nextColor, setNextColor] = useState(5);
   const [combo, setCombo] = useState(2);
   const [gameKey, setGameKey] = useState(0);
+  const [stage, setStage] = useState(1);
   const [view, setView] = useState<View>("game");
   const [coins, setCoins] = useState(120);
-  const [unlocked, setUnlocked] = useState<Set<number>>(() => new Set([0]));
+  const [unlocked, setUnlocked] = useState<Set<number>>(() => new Set());
   const [selectedJelly, setSelectedJelly] = useState(0);
+  const [collectionTab, setCollectionTab] = useState<CollectionTab>("profile");
+  const [observing, setObserving] = useState(false);
   const pausedRef = useRef(paused);
   const statusRef = useRef<GameStatus>(status);
 
@@ -211,7 +256,7 @@ export default function App() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let bubbles = initialBubbles();
+    let bubbles = initialBubbles(stage);
     let projectile: (Bubble & { vx: number; vy: number }) | null = null;
     let aimX = W / 2;
     let aimY = 330;
@@ -346,6 +391,15 @@ export default function App() {
         statusRef.current = "won";
         setStatus("won");
         setCoins((value) => value + 30);
+        setSelectedJelly(stage - 1);
+        setCollectionTab("story");
+        setUnlocked((currentUnlocked) => {
+          const nextUnlocked = new Set(currentUnlocked).add(stage - 1);
+          if ([0, 1, 2, 3, 4, 5, 6].every((index) => nextUnlocked.has(index))) {
+            nextUnlocked.add(7);
+          }
+          return nextUnlocked;
+        });
       }
     };
 
@@ -550,34 +604,31 @@ export default function App() {
       canvas.removeEventListener("pointerdown", onDown);
       cancelAnimationFrame(raf);
     };
-  }, [gameKey, view]);
+  }, [gameKey, stage, view]);
 
   const openJelly = (index: number) => {
-    const jelly = JELLIES[index];
-    if (unlocked.has(index)) {
-      setSelectedJelly(index);
-      return;
-    }
-    if (coins < jelly.cost) return;
-    setCoins((value) => value - jelly.cost);
-    setUnlocked((currentUnlocked) => new Set(currentUnlocked).add(index));
+    if (!unlocked.has(index)) return;
     setSelectedJelly(index);
+    setCollectionTab("profile");
+    setObserving(false);
   };
 
   const returnToGame = () => {
+    if (status === "won" && stage < 7) setStage((currentStage) => currentStage + 1);
     restart();
     setView("game");
   };
 
   if (view === "collection") {
     const selected = JELLIES[selectedJelly];
+    const selectedUnlocked = unlocked.has(selectedJelly);
     const renderJellyCard = (jelly: (typeof JELLIES)[number], index: number) => {
       const isUnlocked = unlocked.has(index);
       return (
         <button
           className={`jelly-card ${jelly.special ? "special-jelly-card" : ""} ${selectedJelly === index && isUnlocked ? "selected" : ""} ${!isUnlocked ? "locked" : ""}`}
           onClick={() => openJelly(index)}
-          disabled={!isUnlocked && coins < jelly.cost}
+          disabled={!isUnlocked}
           key={jelly.name}
         >
           <span className="jelly-number">
@@ -589,15 +640,11 @@ export default function App() {
           </div>
           <strong>{isUnlocked ? jelly.name : "아직 모르는 젤리"}</strong>
           <span className="unlock-cost">
-            {isUnlocked ? (
-              "사연 보기"
-            ) : coins < jelly.cost ? (
-              "코인이 부족해요"
-            ) : (
-              <>
-                <i className="tiny-coin">J</i> {jelly.cost} 해금
-              </>
-            )}
+            {isUnlocked
+              ? "기록 열람"
+              : jelly.special
+                ? "기본 젤리 7종 수집"
+                : `STAGE 1-${index + 1} 클리어`}
           </span>
         </button>
       );
@@ -612,10 +659,12 @@ export default function App() {
             <small>보건실 비밀 기록</small>
             <h1>젤리 도감</h1>
           </div>
-          <div className="collection-coins">
-            <span className="coin">J</span>
-            <span>×</span>
-            <strong>{coins}</strong>
+          <div className="collection-coins collection-progress">
+            <BookIcon />
+            <span>수집</span>
+            <strong>
+              {unlocked.size}/{JELLIES.length}
+            </strong>
           </div>
         </header>
 
@@ -633,32 +682,125 @@ export default function App() {
             </div>
           </div>
 
-          <article className="story-book">
-            <div className="story-tape" />
-            <span className="story-label">JELLY STORY</span>
-            <div className={`story-jelly ${selected.special ? "special-story-jelly" : ""}`}>
-              <img src={selected.image} alt={selected.name} draggable={false} />
-            </div>
-            <small>
-              {selected.special
-                ? "SPECIAL JELLY"
-                : `NO. ${String(selectedJelly + 1).padStart(2, "0")}`}
-            </small>
-            <h2>{selected.name}</h2>
-            <h3>{selected.trait}</h3>
-            <div className="story-divider">
-              <StarIcon />
-            </div>
-            <p>{selected.story}</p>
-            <div className="teacher-note">
-              <img src="/doctor.png" alt="" />
-              <span>
-                “젤리의 이야기를 들어주면
-                <br />
-                마음이 조금씩 원래 모습으로 돌아와요.”
-              </span>
-            </div>
-          </article>
+          {selectedUnlocked ? (
+            <article className="story-book">
+              <div className="story-tape" />
+              <span className="story-label">EUN-YOUNG'S JELLY FILE</span>
+              <div
+                className={`story-jelly ${selected.special ? "special-story-jelly" : ""} ${observing ? "is-observing" : ""}`}
+              >
+                <img src={selected.image} alt={selected.name} draggable={false} />
+              </div>
+              <small>
+                {selected.special
+                  ? "SPECIAL JELLY"
+                  : `FILE ${String(selectedJelly + 1).padStart(2, "0")}`}
+              </small>
+              <h2>{selected.title}</h2>
+              <h3>
+                {selected.name} · {selected.emotion}
+              </h3>
+              <nav className="story-tabs" aria-label="젤리 기록 메뉴">
+                <button
+                  className={collectionTab === "profile" ? "active" : ""}
+                  onClick={() => setCollectionTab("profile")}
+                >
+                  프로필
+                </button>
+                <button
+                  className={collectionTab === "story" ? "active" : ""}
+                  onClick={() => setCollectionTab("story")}
+                >
+                  이야기
+                </button>
+                <button
+                  className={collectionTab === "observe" ? "active" : ""}
+                  onClick={() => setCollectionTab("observe")}
+                >
+                  관찰
+                </button>
+                <button
+                  className={collectionTab === "secret" ? "active" : ""}
+                  onClick={() => setCollectionTab("secret")}
+                >
+                  기록
+                </button>
+              </nav>
+              <div className="story-divider">
+                <StarIcon />
+              </div>
+
+              {collectionTab === "profile" && (
+                <dl className="jelly-profile">
+                  <div>
+                    <dt>감정 잔여물</dt>
+                    <dd>{selected.emotion}</dd>
+                  </div>
+                  <div>
+                    <dt>출현 장소</dt>
+                    <dd>{selected.location}</dd>
+                  </div>
+                  <div>
+                    <dt>관찰 성격</dt>
+                    <dd>{selected.personality}</dd>
+                  </div>
+                  <div>
+                    <dt>연관 모티프</dt>
+                    <dd>{selected.motif}</dd>
+                  </div>
+                </dl>
+              )}
+              {collectionTab === "story" && (
+                <div className="episode-story">
+                  <p>{selected.story}</p>
+                  <blockquote>{selected.lastLine}</blockquote>
+                </div>
+              )}
+              {collectionTab === "observe" && (
+                <div className="observe-panel">
+                  <p>
+                    젤리를 눌러 반응을 관찰해 보세요. 공격하지 않고 가만히 기다리면 다른 움직임을
+                    보여줄지도 모릅니다.
+                  </p>
+                  <button onClick={() => setObserving((value) => !value)}>
+                    {observing ? "관찰 멈추기" : "젤리 관찰하기"}
+                  </button>
+                  <small>{observing ? "젤리가 당신의 시선을 알아챘다." : "현재 반응 없음"}</small>
+                </div>
+              )}
+              {collectionTab === "secret" && (
+                <div className={`secret-record ${selected.special ? "whale-record" : ""}`}>
+                  <span>{selected.special ? "HIDDEN RECORD" : "발견 기록"}</span>
+                  <p>{selected.record}</p>
+                  {selected.special && (
+                    <p>
+                      학교 아래의 바다는 장소가 아니라, 오랫동안 쌓인 마음이 만든 깊이일지도 모른다.
+                    </p>
+                  )}
+                </div>
+              )}
+              <div className="teacher-note">
+                <img src="/doctor.png" alt="" />
+                <span>
+                  “젤리는 무조건 없애는 게 아니야.
+                  <br />
+                  어떤 마음은 끝까지 들어줘야 하거든.”
+                </span>
+              </div>
+            </article>
+          ) : (
+            <article className="story-book locked-story-book">
+              <div className="story-tape" />
+              <span className="story-label">LOCKED JELLY FILE</span>
+              <div className="locked-file-mark">?</div>
+              <h2>아직 발견하지 못한 기록</h2>
+              <p>
+                {selected.special
+                  ? "기본 젤리 7종의 이야기를 모두 모으면 학교 아래에 숨겨진 마지막 기록이 열립니다."
+                  : `STAGE 1-${selectedJelly + 1}을 클리어하면 이 젤리가 남긴 마음의 흔적을 읽을 수 있습니다.`}
+              </p>
+            </article>
+          )}
         </section>
       </main>
     );
@@ -682,7 +824,7 @@ export default function App() {
         <div className="stat-card stage-card">
           <StarIcon />
           <span>
-            <small>STAGE</small> 1-1
+            <small>STAGE</small> 1-{stage}
           </span>
         </div>
         <div className="stat-card coin-card">
@@ -735,14 +877,14 @@ export default function App() {
                   {paused
                     ? "잠시 쉬는 중"
                     : status === "won"
-                      ? "모든 젤리 정화 완료!"
+                      ? `STAGE 1-${stage} 기록 완료!`
                       : "발사 횟수를 다 썼어요"}
                 </h2>
                 <p>
                   {paused
                     ? "준비되면 다시 시작해요"
                     : status === "won"
-                      ? "보건실이 다시 평화로워졌어요."
+                      ? `${JELLIES[stage - 1].name}의 이야기가 도감에 해금되었어요.`
                       : "각도를 바꿔 다시 도전해 보세요."}
                 </p>
                 <button
@@ -756,7 +898,9 @@ export default function App() {
                 >
                   {paused ? "계속하기" : status === "won" ? "젤리 도감으로" : "다시 도전"}
                 </button>
-                {status === "won" && <span className="clear-reward">클리어 보상 +30 코인</span>}
+                {status === "won" && (
+                  <span className="clear-reward">도감 기록 해금 · 클리어 보상 +30 코인</span>
+                )}
               </div>
             </div>
           )}

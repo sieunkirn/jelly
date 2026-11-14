@@ -774,6 +774,17 @@
 .collection-coins .coin {
   width: 34px;
 }
+.collection-progress {
+  min-width: 160px;
+}
+.collection-progress svg {
+  width: 27px;
+  fill: #dbb9e8;
+  stroke: #55498f;
+  stroke-width: 2px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 .collection-content {
   max-width: 1320px;
   margin: auto;
@@ -1028,6 +1039,24 @@
   width: 190px;
   height: 112px;
 }
+.story-jelly.is-observing > img {
+  animation: jelly-observe 1.25s ease-in-out infinite;
+}
+@keyframes jelly-observe {
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: -1deg;
+  }
+  35% {
+    translate: 0 -9px;
+    rotate: 2deg;
+  }
+  65% {
+    translate: 0 -3px;
+    rotate: -2deg;
+  }
+}
 .story-book > small {
   color: #8c84a3;
   font-family: "Nunito", sans-serif;
@@ -1042,6 +1071,26 @@
   color: #81759d;
   font-size: 17px;
   font-weight: 400;
+}
+.story-tabs {
+  margin: 17px -16px 13px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.story-tabs button {
+  padding: 8px 4px;
+  border: 2px solid #b7acd0;
+  border-radius: 10px;
+  color: #756b91;
+  background: #f1edf6;
+  font-size: 13px;
+}
+.story-tabs button.active {
+  border-color: #55498f;
+  color: white;
+  background: #7164b7;
+  box-shadow: 0 3px 0 #4d4384;
 }
 .story-divider {
   display: flex;
@@ -1061,12 +1110,137 @@
   stroke: #a77c31;
   stroke-width: 2px;
 }
-.story-book > p {
+.story-book > p,
+.episode-story > p {
   margin: 18px 0;
   text-align: left;
   font-size: 18px;
   line-height: 1.75;
   word-break: keep-all;
+}
+.episode-story > p {
+  white-space: pre-line;
+}
+.episode-story blockquote {
+  margin: 20px 0;
+  padding: 15px 17px;
+  border-left: 5px solid #e890b6;
+  color: #5d527c;
+  background: rgba(240, 220, 235, 0.64);
+  text-align: left;
+  font-size: 16px;
+  font-style: italic;
+  line-height: 1.6;
+}
+.jelly-profile {
+  margin: 17px 0 20px;
+  text-align: left;
+}
+.jelly-profile > div {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 9px;
+  padding: 10px 4px;
+  border-bottom: 2px dashed #d9cbdc;
+}
+.jelly-profile dt {
+  color: #80749c;
+  font-size: 13px;
+}
+.jelly-profile dd {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+.observe-panel {
+  margin: 18px 0 22px;
+  padding: 18px;
+  border: 3px solid #c8bdd8;
+  border-radius: 18px;
+  background: rgba(238, 233, 248, 0.74);
+}
+.observe-panel p {
+  margin: 0 0 16px;
+  color: #696080;
+  text-align: left;
+  font-size: 15px;
+  line-height: 1.55;
+}
+.observe-panel button {
+  padding: 9px 17px;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  color: white;
+  background: #7567bc;
+  box-shadow: 0 4px 0 #4f438b;
+  font-size: 15px;
+}
+.observe-panel small {
+  display: block;
+  margin-top: 12px;
+  color: #8b82a0;
+}
+.secret-record {
+  margin: 18px 0 22px;
+  padding: 18px;
+  border: 3px solid #c7b5cd;
+  border-radius: 5px 18px 18px 18px;
+  background: #f0e9ef;
+  text-align: left;
+}
+.secret-record > span {
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: 7px;
+  color: white;
+  background: #78698d;
+  font:
+    900 11px/1 "Nunito",
+    sans-serif;
+  letter-spacing: 1px;
+}
+.secret-record p {
+  margin: 13px 0 0;
+  font-size: 16px;
+  line-height: 1.65;
+}
+.whale-record {
+  border-color: #8aaee1;
+  color: #455985;
+  background:
+    radial-gradient(circle at 90% 15%, rgba(255, 255, 255, 0.9) 0 4px, transparent 5px),
+    linear-gradient(145deg, #e3efff, #ebe8ff);
+}
+.locked-story-book {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.locked-file-mark {
+  width: 120px;
+  height: 120px;
+  margin: 45px auto 24px;
+  display: grid;
+  place-items: center;
+  border: 7px solid #736a89;
+  border-radius: 50%;
+  color: white;
+  background: #aaa2b6;
+  box-shadow: inset 0 0 0 6px #d9d4dc;
+  font:
+    900 60px/1 "Nunito",
+    sans-serif;
+}
+.locked-story-book h2 {
+  font-size: 28px;
+}
+.locked-story-book > p {
+  max-width: 300px;
+  color: #786f8d;
+  text-align: center;
+  font-size: 16px;
 }
 .teacher-note {
   display: flex;
@@ -1205,6 +1379,15 @@
     border-width: 3px;
     font-size: 16px;
   }
+  .collection-progress {
+    min-width: auto;
+  }
+  .collection-progress span {
+    display: none;
+  }
+  .collection-progress svg {
+    width: 22px;
+  }
   .collection-coins .coin {
     width: 27px;
   }
@@ -1232,6 +1415,15 @@
   }
   .story-book > p {
     font-size: 16px;
+  }
+  .story-tabs {
+    margin-inline: -12px;
+  }
+  .story-tabs button {
+    font-size: 12px;
+  }
+  .jelly-profile > div {
+    grid-template-columns: 78px 1fr;
   }
   .jelly-grid {
     width: 100%;
