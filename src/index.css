@@ -3015,3 +3015,23 @@
   image-rendering: pixelated;
   user-select: none;
 }
+
+/* Stage clear card: one headline, two reward chips, one big NEXT button */
+.clear-chip {
+  display: inline-block;
+  margin: 0 4px;
+  padding: 4px 12px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  color: var(--ink);
+  background: #fff1b8;
+  font-size: 16px;
+  font-weight: 800;
+}
+.clear-chip + .clear-chip {
+  background: #ffd6e5;
+}
+.overlay-card button {
+  min-width: 220px;
+  letter-spacing: 1px;
+}

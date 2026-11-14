@@ -584,6 +584,20 @@ export default function App() {
     let last = performance.now();
     let burst = 0;
     let burstText = "NICE!";
+    // Pop / drop animations for jellies that were just removed
+    type JellyFx = {
+      b: Bubble;
+      t: number;
+      delay: number;
+      kind: "pop" | "drop";
+      vy: number;
+      vx: number;
+    };
+    type Particle = { x: number; y: number; vx: number; vy: number; t: number; color: string };
+    let fx: JellyFx[] = [];
+    let particles: Particle[] = [];
+    let winTimer = 0;
+    let winPending = false;
     // 홍인표의 보호막: missed shots this round that will not cost a shot
     let shieldLeft = SHIELD_CHARGES;
     setShieldCharges(SHIELD_CHARGES);
@@ -619,10 +633,10 @@ export default function App() {
       ].forEach(([cx, cy]) => ctx.fillRect(x + cx * u, y + cy * u, u + 1, u + 1));
     };
 
-    const drawBubble = (b: Bubble, alpha = 1) => {
+    const drawBubble = (b: Bubble, alpha = 1, scale = 1) => {
       ctx.save();
       ctx.globalAlpha = alpha;
-      const r = R * (b.popping ? Math.max(0.1, 1 - b.popping) : 1);
+      const r = R * scale * (b.popping ? Math.max(0.1, 1 - b.popping) : 1);
       ctx.translate(b.x, b.y);
       ctx.shadowColor = DARKS[b.color];
       ctx.shadowBlur = 0;
@@ -707,6 +721,18 @@ export default function App() {
       bubbles.forEach((b) => {
         if (!removed.has(b.id) && !connected.has(b.id)) removed.add(b.id);
       });
+      const clusterIds = new Set(cluster.map((b) => b.id));
+      bubbles.forEach((b) => {
+        if (!removed.has(b.id)) return;
+        if (clusterIds.has(b.id)) {
+          // matched: chain-pop outward from the jelly that was just placed
+          const dist = Math.hypot(b.x - added.x, b.y - added.y);
+          fx.push({ b, t: 0, delay: dist / 900, kind: "pop", vx: 0, vy: 0 });
+        } else {
+          // cut loose: fall with a small random sideways drift
+          fx.push({ b, t: 0, delay: 0.12, kind: "drop", vx: (Math.random() - 0.5) * 90, vy: -120 });
+        }
+      });
       bubbles = bubbles.filter((b) => !removed.has(b.id));
       const earned = removed.size * 120 * Math.max(1, Math.min(4, Math.floor(removed.size / 3)));
       setScore((s) => s + earned);
@@ -717,7 +743,12 @@ export default function App() {
       if (equippedRef.current === "rainbow" && removed.size >= 6) setShots((s) => s + 1);
       if (bubbles.length === 0) {
         statusRef.current = "won";
-        setStatus("won");
+        // let the last pop play before the clear card appears
+        winPending = true;
+        winTimer = window.setTimeout(() => {
+          winPending = false;
+          setStatus("won");
+        }, 700);
         setCoins((value) => value + (equippedRef.current === "sword" ? 60 : 30));
         setSelectedJelly(stage - 1);
         setCollectionTab("story");
@@ -865,6 +896,58 @@ export default function App() {
 
       bubbles.forEach((b) => drawBubble(b));
 
+      // Jelly pop / drop animations
+      fx = fx.filter((e) => {
+        e.t += dt;
+        const local = e.t - e.delay;
+        if (local < 0) {
+          drawBubble(e.b);
+          return true;
+        }
+        if (e.kind === "pop") {
+          const p = local / 0.24;
+          if (p >= 1) return false;
+          if (!e.vy) {
+            // first frame of the pop: burst into pixel particles
+            e.vy = 1;
+            for (let i = 0; i < 9; i++) {
+              const a = (Math.PI * 2 * i) / 9 + Math.random() * 0.4;
+              const sp = 160 + Math.random() * 160;
+              particles.push({
+                x: e.b.x,
+                y: e.b.y,
+                vx: Math.cos(a) * sp,
+                vy: Math.sin(a) * sp - 60,
+                t: 0,
+                color: i % 3 === 0 ? "#ffffff" : COLORS[e.b.color],
+              });
+            }
+          }
+          drawBubble(e.b, 1 - p, 1 + p * 0.45);
+          return true;
+        }
+        // drop
+        if (local > 0.9) return false;
+        e.vy += 1500 * dt;
+        e.b = { ...e.b, x: e.b.x + e.vx * dt, y: e.b.y + e.vy * dt };
+        drawBubble(e.b, Math.max(0, 1 - local / 0.9));
+        return true;
+      });
+      particles = particles.filter((pt) => {
+        pt.t += dt;
+        if (pt.t > 0.5) return false;
+        pt.vy += 900 * dt;
+        pt.x += pt.vx * dt;
+        pt.y += pt.vy * dt;
+        ctx.save();
+        ctx.globalAlpha = 1 - pt.t / 0.5;
+        ctx.fillStyle = pt.color;
+        const size = 7 - pt.t * 6;
+        ctx.fillRect(pt.x - size / 2, pt.y - size / 2, size, size);
+        ctx.restore();
+        return true;
+      });
+
       const originX = W / 2;
       const originY = 641;
       if (!projectile && statusRef.current === "playing") {
@@ -981,6 +1064,11 @@ export default function App() {
       canvas.removeEventListener("pointermove", onMove);
       canvas.removeEventListener("pointerdown", onDown);
       cancelAnimationFrame(raf);
+      // leaving mid-animation: show the clear result right away
+      if (winPending) {
+        window.clearTimeout(winTimer);
+        setStatus("won");
+      }
     };
   }, [gameKey, stage, view]);
 
@@ -1432,15 +1520,22 @@ export default function App() {
                   {paused
                     ? "잠시 쉬는 중"
                     : status === "won"
-                      ? `STAGE 1-${stage} 기록 완료!`
+                      ? `STAGE 1-${stage} CLEAR!`
                       : "발사 횟수를 다 썼어요"}
                 </h2>
                 <p>
-                  {paused
-                    ? "준비되면 다시 시작해요"
-                    : status === "won"
-                      ? `${JELLIES[stage - 1].name}의 이야기가 도감에 해금되었어요.`
-                      : "각도를 바꿔 다시 도전해 보세요."}
+                  {paused ? (
+                    "준비되면 다시 시작해요"
+                  ) : status === "won" ? (
+                    <>
+                      <span className="clear-chip">
+                        +{equippedWeapon === "sword" ? 60 : 30} 코인
+                      </span>
+                      <span className="clear-chip">{JELLIES[stage - 1].name} 해금</span>
+                    </>
+                  ) : (
+                    "각도를 바꿔 다시 도전해 보세요."
+                  )}
                 </p>
                 <button
                   onClick={
@@ -1460,15 +1555,10 @@ export default function App() {
                     ? "계속하기"
                     : status === "won"
                       ? stage < 7
-                        ? `STAGE 1-${stage + 1} 시작`
-                        : "젤리 도감으로"
+                        ? "NEXT STAGE ▶"
+                        : "젤리 도감 보기"
                       : "다시 도전"}
                 </button>
-                {status === "won" && (
-                  <span className="clear-reward">
-                    도감 기록 해금 · 클리어 보상 +{equippedWeapon === "sword" ? 60 : 30} 코인
-                  </span>
-                )}
               </div>
             </div>
           )}
