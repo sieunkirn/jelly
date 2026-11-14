@@ -31,60 +31,77 @@ const FACES = [
 ];
 const JELLIES = [
   {
-    name: "열정이",
+    name: "움벌레 젤리",
     color: 0,
     cost: 0,
-    trait: "마음이 너무 뜨거웠던 젤리",
+    image: "/jellies/bug.png",
+    trait: "움직이고 싶지만 용기가 없었던 젤리",
     story:
-      "열정이는 무엇이든 가장 잘해야 한다고 생각하던 학생이었어요. 쉬는 시간에도 쉬지 못하고 달리다가 뜨거워진 마음이 빨간 젤리로 녹아버렸죠. 이제는 천천히 해도 괜찮다는 말을 듣고 싶어 해요.",
+      "움벌레 젤리는 새로운 곳에 가고 싶었지만 실수할까 봐 늘 같은 자리만 맴돌았어요. 마음속에 쌓인 답답함이 빨간 더듬이로 자라 결국 젤리가 되었답니다. 작은 한 걸음에도 응원을 보내주면 누구보다 씩씩하게 앞으로 나아가요.",
   },
   {
-    name: "몽글이",
+    name: "문어 젤리",
     color: 1,
     cost: 20,
-    trait: "걱정을 혼자 삼켰던 젤리",
+    image: "/jellies/octopus.png",
+    trait: "너무 많은 일을 한꺼번에 안았던 젤리",
     story:
-      "몽글이는 친구들에게 걱정을 말하면 폐를 끼친다고 생각했어요. 속에 담아 둔 걱정이 점점 부풀어 어느 날 주황빛 젤리가 되었답니다. 누군가 먼저 '무슨 일 있어?'라고 물어보면 금세 마음을 열어요.",
+      "문어 젤리는 모든 부탁을 혼자 해결하려고 여덟 손을 쉴 새 없이 움직였어요. 어느 날 너무 많은 일을 꼭 끌어안은 채 말랑한 젤리가 되었죠. 이제는 힘들 때 도움을 청하는 것도 용기라는 걸 배우고 있어요.",
   },
   {
-    name: "반짝이",
+    name: "두꺼비 젤리",
     color: 2,
-    cost: 30,
-    trait: "칭찬 한마디를 기다린 젤리",
+    cost: 25,
+    image: "/jellies/toad.png",
+    trait: "속상한 말을 꿀꺽 삼켰던 젤리",
     story:
-      "반짝이는 늘 다른 사람을 빛내 주었지만 정작 자신은 칭찬받아 본 적이 없었어요. 간직한 작은 바람이 노란 별빛 젤리가 되었죠. 진심 어린 칭찬을 들으면 누구보다 환하게 빛나요.",
+      "두꺼비 젤리는 속상한 일이 생겨도 괜찮은 척 모두 삼켜버렸어요. 참아온 마음이 배 속에서 노랗게 부풀어 젤리가 되었답니다. 안전한 곳에서 솔직한 기분을 말하면 몸도 마음도 다시 가벼워져요.",
   },
   {
-    name: "느긋이",
+    name: "이끼 젤리",
     color: 3,
-    cost: 40,
-    trait: "잠깐 멈추고 싶었던 젤리",
+    cost: 30,
+    image: "/jellies/moss.png",
+    trait: "아무도 모르게 조용히 숨었던 젤리",
     story:
-      "느긋이는 빽빽한 일정표를 따라가느라 좋아하는 풀 냄새도 잊고 살았어요. 어느 날 운동장 잔디에 누운 채 초록 젤리가 되었답니다. 아무것도 하지 않는 시간도 소중하다는 걸 배우는 중이에요.",
+      "이끼 젤리는 눈에 띄면 놀림받을까 봐 교실의 가장 조용한 구석에 숨곤 했어요. 너무 오래 웅크리고 있어 머리에 초록 이끼가 자라 젤리가 되었죠. 먼저 다정하게 인사해 주면 수줍은 미소를 보여줘요.",
   },
   {
-    name: "소심이",
+    name: "두발 젤리",
     color: 4,
-    cost: 50,
-    trait: "하고 싶은 말을 숨긴 젤리",
+    cost: 35,
+    image: "/jellies/twoleg.png",
+    trait: "엉킨 생각을 풀지 못했던 젤리",
     story:
-      "소심이는 손을 들고 싶어도 틀릴까 봐 늘 책상만 바라봤어요. 삼킨 말들이 파란 물방울처럼 차올라 젤리가 되었죠. 기다려 주는 친구 앞에서는 아주 멋진 이야기를 들려준답니다.",
+      "두발 젤리는 걱정이 생길 때마다 생각의 실타래를 머리에 감아두었어요. 파란 머리카락이 잔뜩 엉키며 결국 젤리가 되었답니다. 하나씩 천천히 이야기를 나누면 복잡한 생각도 부드럽게 풀려요.",
   },
   {
-    name: "두근이",
-    color: 5,
-    cost: 60,
-    trait: "좋아하는 마음이 넘친 젤리",
-    story:
-      "두근이는 모두를 좋아해서 부탁을 거절하지 못했어요. 다른 사람을 챙기느라 지친 마음이 분홍 하트 젤리가 되었답니다. 이제는 자기 마음도 먼저 돌보는 연습을 하고 있어요.",
-  },
-  {
-    name: "새벽이",
+    name: "해파리 젤리",
     color: 6,
-    cost: 70,
-    trait: "혼자 깨어 있던 젤리",
+    cost: 40,
+    image: "/jellies/jellyfish.png",
+    trait: "마음 가는 곳을 찾지 못했던 젤리",
     story:
-      "새벽이는 내일이 걱정되어 매일 밤 늦도록 잠들지 못했어요. 창밖의 보랏빛 새벽을 너무 오래 바라보다가 보라 젤리가 되었죠. 따뜻한 우유와 다정한 이야기를 들으면 편안히 잠들 수 있어요.",
+      "해파리 젤리는 친구들의 의견에 떠밀려 언제나 다른 사람이 가는 곳만 따라갔어요. 자신이 좋아하는 것을 잊고 둥둥 떠다니다 보랏빛 젤리가 되었죠. 스스로 선택할 시간을 주면 반짝이는 길을 찾아가요.",
+  },
+  {
+    name: "하트 젤리",
+    color: 5,
+    cost: 45,
+    image: "/jellies/heart.png",
+    trait: "모두에게 사랑받고 싶었던 젤리",
+    story:
+      "하트 젤리는 모두에게 사랑받으려고 싫은 부탁도 거절하지 못했어요. 다른 사람의 마음만 챙기다 자신의 마음이 분홍 하트 젤리가 되었답니다. 이제는 나를 먼저 사랑하는 방법을 연습하고 있어요.",
+  },
+  {
+    name: "흰수염고래 젤리",
+    color: 4,
+    cost: 90,
+    image: "/jellies/whale.png",
+    trait: "깊은 외로움을 노래로 숨긴 특별 젤리",
+    special: true,
+    story:
+      "흰수염고래 젤리는 아주 넓은 바다에서 자신의 노래를 들어줄 친구를 오랫동안 기다렸어요. 외로운 노래가 파도에 녹아 거대한 젤리가 되었답니다. 조용히 곁에서 끝까지 이야기를 들어주면 세상에서 가장 따뜻한 노래를 들려줘요.",
   },
 ];
 
@@ -554,6 +571,37 @@ export default function App() {
 
   if (view === "collection") {
     const selected = JELLIES[selectedJelly];
+    const renderJellyCard = (jelly: (typeof JELLIES)[number], index: number) => {
+      const isUnlocked = unlocked.has(index);
+      return (
+        <button
+          className={`jelly-card ${jelly.special ? "special-jelly-card" : ""} ${selectedJelly === index && isUnlocked ? "selected" : ""} ${!isUnlocked ? "locked" : ""}`}
+          onClick={() => openJelly(index)}
+          disabled={!isUnlocked && coins < jelly.cost}
+          key={jelly.name}
+        >
+          <span className="jelly-number">
+            {jelly.special ? "SPECIAL" : `NO. ${String(index + 1).padStart(2, "0")}`}
+          </span>
+          <div className="card-jelly">
+            <img src={jelly.image} alt="" draggable={false} />
+            {!isUnlocked && <span className="lock-mark">?</span>}
+          </div>
+          <strong>{isUnlocked ? jelly.name : "아직 모르는 젤리"}</strong>
+          <span className="unlock-cost">
+            {isUnlocked ? (
+              "사연 보기"
+            ) : coins < jelly.cost ? (
+              "코인이 부족해요"
+            ) : (
+              <>
+                <i className="tiny-coin">J</i> {jelly.cost} 해금
+              </>
+            )}
+          </span>
+        </button>
+      );
+    };
     return (
       <main className="collection-shell">
         <header className="collection-header">
@@ -572,45 +620,30 @@ export default function App() {
         </header>
 
         <section className="collection-content">
-          <div className="jelly-grid" aria-label="젤리 목록">
-            {JELLIES.map((jelly, index) => {
-              const isUnlocked = unlocked.has(index);
-              return (
-                <button
-                  className={`jelly-card ${selectedJelly === index && isUnlocked ? "selected" : ""} ${!isUnlocked ? "locked" : ""}`}
-                  onClick={() => openJelly(index)}
-                  disabled={!isUnlocked && coins < jelly.cost}
-                  key={jelly.name}
-                >
-                  <span className="jelly-number">NO. {String(index + 1).padStart(2, "0")}</span>
-                  <div className="card-jelly">
-                    <JellyPreview color={jelly.color} heart={jelly.color === 5} />
-                    {!isUnlocked && <span className="lock-mark">?</span>}
-                  </div>
-                  <strong>{isUnlocked ? jelly.name : "아직 모르는 젤리"}</strong>
-                  <span className="unlock-cost">
-                    {isUnlocked ? (
-                      "사연 보기"
-                    ) : coins < jelly.cost ? (
-                      "코인이 부족해요"
-                    ) : (
-                      <>
-                        <i className="tiny-coin">J</i> {jelly.cost} 해금
-                      </>
-                    )}
-                  </span>
-                </button>
-              );
-            })}
+          <div className="collection-list" aria-label="젤리 목록">
+            <div className="collection-section-title">
+              <span>기본 젤리 (7종)</span>
+            </div>
+            <div className="jelly-grid">{JELLIES.slice(0, 7).map(renderJellyCard)}</div>
+            <div className="collection-section-title special-title">
+              <span>특별 젤리</span>
+            </div>
+            <div className="special-jelly-grid">
+              {JELLIES.slice(7).map((jelly, index) => renderJellyCard(jelly, index + 7))}
+            </div>
           </div>
 
           <article className="story-book">
             <div className="story-tape" />
             <span className="story-label">JELLY STORY</span>
-            <div className="story-jelly">
-              <JellyPreview color={selected.color} heart={selected.color === 5} />
+            <div className={`story-jelly ${selected.special ? "special-story-jelly" : ""}`}>
+              <img src={selected.image} alt={selected.name} draggable={false} />
             </div>
-            <small>NO. {String(selectedJelly + 1).padStart(2, "0")}</small>
+            <small>
+              {selected.special
+                ? "SPECIAL JELLY"
+                : `NO. ${String(selectedJelly + 1).padStart(2, "0")}`}
+            </small>
             <h2>{selected.name}</h2>
             <h3>{selected.trait}</h3>
             <div className="story-divider">
