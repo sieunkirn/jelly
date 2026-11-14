@@ -583,8 +583,310 @@
   translate: 0 4px;
   box-shadow: 0 1px 0 #4e438f;
 }
+.clear-reward {
+  display: block;
+  margin-top: 13px;
+  color: #b1782d;
+  font-size: 16px;
+}
+
+.collection-shell {
+  --ink: #393463;
+  width: 100%;
+  min-height: 100vh;
+  padding: 24px clamp(18px, 4vw, 68px) 42px;
+  color: var(--ink);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.14) 2px, transparent 2px) 0 0 / 100% 7px,
+    radial-gradient(circle at 85% 12%, #f5cbe5 0, transparent 25%),
+    linear-gradient(145deg, #c9c4f4, #aaa9e9 54%, #8584d1);
+}
+.collection-header {
+  max-width: 1320px;
+  margin: 0 auto 28px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+.collection-header > div:nth-child(2) {
+  text-align: center;
+}
+.collection-header small {
+  color: #6a619d;
+  font-size: 16px;
+}
+.collection-header h1 {
+  margin: 0;
+  font-size: clamp(42px, 6vw, 72px);
+  line-height: 1;
+  text-shadow: 4px 4px 0 #fff;
+}
+.back-button,
+.collection-coins {
+  justify-self: start;
+  border: 5px solid var(--ink);
+  border-radius: 18px;
+  background: #fffdf8;
+  box-shadow: 0 6px 0 rgba(58, 51, 104, 0.3);
+}
+.back-button {
+  padding: 10px 18px;
+  color: var(--ink);
+  font-size: 20px;
+}
+.back-button span {
+  margin-right: 5px;
+  font-family: "Nunito", sans-serif;
+  font-size: 31px;
+  line-height: 0;
+  vertical-align: -2px;
+}
+.collection-coins {
+  justify-self: end;
+  min-width: 145px;
+  padding: 8px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  font-family: "Nunito", sans-serif;
+  font-size: 22px;
+}
+.collection-coins .coin {
+  width: 34px;
+}
+.collection-content {
+  max-width: 1320px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: minmax(530px, 1.45fr) minmax(340px, 0.75fr);
+  gap: clamp(24px, 4vw, 55px);
+  align-items: start;
+}
+.jelly-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(145px, 1fr));
+  gap: 18px;
+}
+.jelly-card {
+  position: relative;
+  min-height: 220px;
+  padding: 17px 12px 14px;
+  overflow: hidden;
+  border: 5px solid #575083;
+  border-radius: 24px;
+  color: var(--ink);
+  background: #fffaf3;
+  box-shadow:
+    inset 0 0 0 4px #ead7ea,
+    0 7px 0 rgba(67, 58, 116, 0.28);
+  transition:
+    translate 0.18s ease,
+    box-shadow 0.18s ease;
+}
+.jelly-card:hover {
+  translate: 0 -4px;
+}
+.jelly-card.selected {
+  border-color: #f1c347;
+  box-shadow:
+    inset 0 0 0 5px #fff0a9,
+    0 8px 0 #a47e39;
+}
+.jelly-card.locked {
+  background: #ded9e8;
+  filter: saturate(0.45);
+}
+.jelly-card:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+.jelly-card:disabled:hover {
+  translate: 0;
+}
+.jelly-number {
+  position: absolute;
+  left: 14px;
+  top: 12px;
+  color: #8a83a5;
+  font-family: "Nunito", sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+}
+.card-jelly {
+  position: relative;
+  width: 105px;
+  height: 105px;
+  margin: 15px auto 3px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #dce9ff;
+  box-shadow: inset 0 0 0 5px #c0d0f0;
+}
+.card-jelly .preview-jelly {
+  width: 72px;
+  height: 65px;
+}
+.lock-mark {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 4px solid #4e486f;
+  border-radius: 50%;
+  color: white;
+  background: #69627f;
+  font:
+    900 28px/1 "Nunito",
+    sans-serif;
+}
+.jelly-card > strong {
+  display: block;
+  margin-top: 7px;
+  font-size: 19px;
+}
+.unlock-cost {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 7px;
+  padding: 5px 9px;
+  border-radius: 10px;
+  color: #786d92;
+  background: #eee8f2;
+  font-size: 13px;
+}
+.tiny-coin {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #9b722c;
+  border-radius: 50%;
+  color: #9b722c;
+  background: #f5d95d;
+  font:
+    900 10px/1 "Nunito",
+    sans-serif;
+}
+.story-book {
+  position: sticky;
+  top: 24px;
+  min-height: 610px;
+  padding: 45px 36px 28px;
+  border: 6px solid var(--ink);
+  border-radius: 9px 9px 30px 9px;
+  text-align: center;
+  background:
+    repeating-linear-gradient(transparent 0 34px, rgba(123, 104, 171, 0.12) 34px 36px), #fffdf5;
+  box-shadow:
+    inset 0 0 0 5px #edcfdf,
+    10px 11px 0 rgba(63, 52, 111, 0.3);
+}
+.story-tape {
+  position: absolute;
+  width: 100px;
+  height: 32px;
+  left: 50%;
+  top: -17px;
+  translate: -50% 0;
+  rotate: -2deg;
+  background: rgba(255, 240, 190, 0.88);
+}
+.story-label {
+  color: #877ba6;
+  font:
+    900 13px/1 "Nunito",
+    sans-serif;
+  letter-spacing: 2px;
+}
+.story-jelly {
+  width: 130px;
+  height: 130px;
+  margin: 16px auto 10px;
+  display: grid;
+  place-items: center;
+  border: 8px solid white;
+  outline: 5px solid #736ba6;
+  border-radius: 50%;
+  background: #dce9ff;
+}
+.story-jelly .preview-jelly {
+  width: 88px;
+  height: 78px;
+}
+.story-book > small {
+  color: #8c84a3;
+  font-family: "Nunito", sans-serif;
+  font-weight: 900;
+}
+.story-book h2 {
+  margin: 2px 0 0;
+  font-size: 38px;
+}
+.story-book h3 {
+  margin: 2px 0 12px;
+  color: #81759d;
+  font-size: 17px;
+  font-weight: 400;
+}
+.story-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.story-divider::before,
+.story-divider::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background: #d9bdd2;
+}
+.story-divider svg {
+  width: 24px;
+  fill: #f4d85d;
+  stroke: #a77c31;
+  stroke-width: 2px;
+}
+.story-book > p {
+  margin: 18px 0;
+  text-align: left;
+  font-size: 18px;
+  line-height: 1.75;
+  word-break: keep-all;
+}
+.teacher-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px 8px;
+  border-radius: 18px;
+  color: #645c80;
+  background: #eee9f8;
+  text-align: left;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.teacher-note img {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  object-position: top;
+}
 
 @media (max-width: 1050px) {
+  .collection-content {
+    grid-template-columns: minmax(430px, 1.25fr) minmax(300px, 0.75fr);
+    gap: 22px;
+  }
+  .jelly-grid {
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+  }
+  .story-book {
+    padding-inline: 25px;
+  }
   .topbar {
     height: 92px;
     grid-template-columns: 1fr 1.1fr 1.15fr 64px;
@@ -652,6 +954,84 @@
 }
 
 @media (max-width: 760px) {
+  .collection-shell {
+    padding: 14px 12px 35px;
+  }
+  .collection-header {
+    grid-template-columns: auto 1fr auto;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .collection-header small {
+    display: none;
+  }
+  .collection-header h1 {
+    font-size: 36px;
+  }
+  .back-button {
+    padding: 8px 10px;
+    border-width: 3px;
+    font-size: 0;
+  }
+  .back-button span {
+    margin: 0;
+    font-size: 30px;
+  }
+  .collection-coins {
+    min-width: auto;
+    padding: 6px 9px;
+    border-width: 3px;
+    font-size: 16px;
+  }
+  .collection-coins .coin {
+    width: 27px;
+  }
+  .collection-content {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .story-book {
+    position: relative;
+    top: 0;
+    width: 100%;
+    min-height: 0;
+    padding: 36px 24px 22px;
+  }
+  .story-jelly {
+    width: 105px;
+    height: 105px;
+  }
+  .story-jelly .preview-jelly {
+    width: 70px;
+    height: 63px;
+  }
+  .story-book h2 {
+    font-size: 31px;
+  }
+  .story-book > p {
+    font-size: 16px;
+  }
+  .jelly-grid {
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(135px, 1fr));
+    gap: 11px;
+  }
+  .jelly-card {
+    min-height: 194px;
+    padding-inline: 7px;
+    border-width: 4px;
+  }
+  .card-jelly {
+    width: 88px;
+    height: 88px;
+  }
+  .card-jelly .preview-jelly {
+    width: 61px;
+    height: 55px;
+  }
+  .jelly-card > strong {
+    font-size: 16px;
+  }
   .game-shell {
     min-height: 100svh;
   }

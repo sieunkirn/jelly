@@ -10,6 +10,7 @@ type Bubble = {
 };
 
 type GameStatus = "playing" | "won" | "lost";
+type View = "game" | "collection";
 
 const W = 720;
 const H = 720;
@@ -28,6 +29,64 @@ const FACES = [
   ["•", "ᵕ", "•"],
   ["•", "o", "•"],
 ];
+const JELLIES = [
+  {
+    name: "열정이",
+    color: 0,
+    cost: 0,
+    trait: "마음이 너무 뜨거웠던 젤리",
+    story:
+      "열정이는 무엇이든 가장 잘해야 한다고 생각하던 학생이었어요. 쉬는 시간에도 쉬지 못하고 달리다가 뜨거워진 마음이 빨간 젤리로 녹아버렸죠. 이제는 천천히 해도 괜찮다는 말을 듣고 싶어 해요.",
+  },
+  {
+    name: "몽글이",
+    color: 1,
+    cost: 20,
+    trait: "걱정을 혼자 삼켰던 젤리",
+    story:
+      "몽글이는 친구들에게 걱정을 말하면 폐를 끼친다고 생각했어요. 속에 담아 둔 걱정이 점점 부풀어 어느 날 주황빛 젤리가 되었답니다. 누군가 먼저 '무슨 일 있어?'라고 물어보면 금세 마음을 열어요.",
+  },
+  {
+    name: "반짝이",
+    color: 2,
+    cost: 30,
+    trait: "칭찬 한마디를 기다린 젤리",
+    story:
+      "반짝이는 늘 다른 사람을 빛내 주었지만 정작 자신은 칭찬받아 본 적이 없었어요. 간직한 작은 바람이 노란 별빛 젤리가 되었죠. 진심 어린 칭찬을 들으면 누구보다 환하게 빛나요.",
+  },
+  {
+    name: "느긋이",
+    color: 3,
+    cost: 40,
+    trait: "잠깐 멈추고 싶었던 젤리",
+    story:
+      "느긋이는 빽빽한 일정표를 따라가느라 좋아하는 풀 냄새도 잊고 살았어요. 어느 날 운동장 잔디에 누운 채 초록 젤리가 되었답니다. 아무것도 하지 않는 시간도 소중하다는 걸 배우는 중이에요.",
+  },
+  {
+    name: "소심이",
+    color: 4,
+    cost: 50,
+    trait: "하고 싶은 말을 숨긴 젤리",
+    story:
+      "소심이는 손을 들고 싶어도 틀릴까 봐 늘 책상만 바라봤어요. 삼킨 말들이 파란 물방울처럼 차올라 젤리가 되었죠. 기다려 주는 친구 앞에서는 아주 멋진 이야기를 들려준답니다.",
+  },
+  {
+    name: "두근이",
+    color: 5,
+    cost: 60,
+    trait: "좋아하는 마음이 넘친 젤리",
+    story:
+      "두근이는 모두를 좋아해서 부탁을 거절하지 못했어요. 다른 사람을 챙기느라 지친 마음이 분홍 하트 젤리가 되었답니다. 이제는 자기 마음도 먼저 돌보는 연습을 하고 있어요.",
+  },
+  {
+    name: "새벽이",
+    color: 6,
+    cost: 70,
+    trait: "혼자 깨어 있던 젤리",
+    story:
+      "새벽이는 내일이 걱정되어 매일 밤 늦도록 잠들지 못했어요. 창밖의 보랏빛 새벽을 너무 오래 바라보다가 보라 젤리가 되었죠. 따뜻한 우유와 다정한 이야기를 들으면 편안히 잠들 수 있어요.",
+  },
+];
 
 const cellCenter = (row: number, col: number) => ({
   x: 73 + col * X_GAP + (row % 2 ? X_GAP / 2 : 0),
@@ -37,7 +96,7 @@ const cellCenter = (row: number, col: number) => ({
 function initialBubbles() {
   const bubbles: Bubble[] = [];
   let id = 1;
-  for (let row = 0; row < 7; row++) {
+  for (let row = 0; row < 5; row++) {
     const count = row % 2 ? 10 : 11;
     for (let col = 0; col < count; col++) {
       const { x, y } = cellCenter(row, col);
@@ -45,7 +104,7 @@ function initialBubbles() {
         id: id++,
         x,
         y,
-        color: (row * 3 + col * 2 + Math.floor(col / 3)) % COLORS.length,
+        color: (row * 3 + col * 2 + Math.floor(col / 3)) % 6,
         heart: (row + col) % 7 === 3,
       });
     }
@@ -88,13 +147,17 @@ function Doctor() {
 export default function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [score, setScore] = useState(12340);
-  const [shots, setShots] = useState(15);
+  const [shots, setShots] = useState(24);
   const [paused, setPaused] = useState(false);
   const [status, setStatus] = useState<GameStatus>("playing");
   const [currentColor, setCurrentColor] = useState(5);
   const [nextColor, setNextColor] = useState(5);
   const [combo, setCombo] = useState(2);
   const [gameKey, setGameKey] = useState(0);
+  const [view, setView] = useState<View>("game");
+  const [coins, setCoins] = useState(120);
+  const [unlocked, setUnlocked] = useState<Set<number>>(() => new Set([0]));
+  const [selectedJelly, setSelectedJelly] = useState(0);
   const pausedRef = useRef(paused);
   const statusRef = useRef<GameStatus>(status);
 
@@ -107,7 +170,7 @@ export default function App() {
 
   const restart = useCallback(() => {
     setScore(12340);
-    setShots(15);
+    setShots(24);
     setPaused(false);
     setStatus("playing");
     setCurrentColor(5);
@@ -256,6 +319,7 @@ export default function App() {
       if (bubbles.length === 0) {
         statusRef.current = "won";
         setStatus("won");
+        setCoins((value) => value + 30);
       }
     };
 
@@ -460,7 +524,103 @@ export default function App() {
       canvas.removeEventListener("pointerdown", onDown);
       cancelAnimationFrame(raf);
     };
-  }, [gameKey]);
+  }, [gameKey, view]);
+
+  const openJelly = (index: number) => {
+    const jelly = JELLIES[index];
+    if (unlocked.has(index)) {
+      setSelectedJelly(index);
+      return;
+    }
+    if (coins < jelly.cost) return;
+    setCoins((value) => value - jelly.cost);
+    setUnlocked((currentUnlocked) => new Set(currentUnlocked).add(index));
+    setSelectedJelly(index);
+  };
+
+  const returnToGame = () => {
+    restart();
+    setView("game");
+  };
+
+  if (view === "collection") {
+    const selected = JELLIES[selectedJelly];
+    return (
+      <main className="collection-shell">
+        <header className="collection-header">
+          <button className="back-button" onClick={returnToGame}>
+            <span aria-hidden="true">‹</span> 게임으로
+          </button>
+          <div>
+            <small>보건실 비밀 기록</small>
+            <h1>젤리 도감</h1>
+          </div>
+          <div className="collection-coins">
+            <span className="coin">J</span>
+            <span>×</span>
+            <strong>{coins}</strong>
+          </div>
+        </header>
+
+        <section className="collection-content">
+          <div className="jelly-grid" aria-label="젤리 목록">
+            {JELLIES.map((jelly, index) => {
+              const isUnlocked = unlocked.has(index);
+              return (
+                <button
+                  className={`jelly-card ${selectedJelly === index && isUnlocked ? "selected" : ""} ${!isUnlocked ? "locked" : ""}`}
+                  onClick={() => openJelly(index)}
+                  disabled={!isUnlocked && coins < jelly.cost}
+                  key={jelly.name}
+                >
+                  <span className="jelly-number">NO. {String(index + 1).padStart(2, "0")}</span>
+                  <div className="card-jelly">
+                    <JellyPreview color={jelly.color} heart={jelly.color === 5} />
+                    {!isUnlocked && <span className="lock-mark">?</span>}
+                  </div>
+                  <strong>{isUnlocked ? jelly.name : "아직 모르는 젤리"}</strong>
+                  <span className="unlock-cost">
+                    {isUnlocked ? (
+                      "사연 보기"
+                    ) : coins < jelly.cost ? (
+                      "코인이 부족해요"
+                    ) : (
+                      <>
+                        <i className="tiny-coin">J</i> {jelly.cost} 해금
+                      </>
+                    )}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <article className="story-book">
+            <div className="story-tape" />
+            <span className="story-label">JELLY STORY</span>
+            <div className="story-jelly">
+              <JellyPreview color={selected.color} heart={selected.color === 5} />
+            </div>
+            <small>NO. {String(selectedJelly + 1).padStart(2, "0")}</small>
+            <h2>{selected.name}</h2>
+            <h3>{selected.trait}</h3>
+            <div className="story-divider">
+              <StarIcon />
+            </div>
+            <p>{selected.story}</p>
+            <div className="teacher-note">
+              <img src="/doctor.png" alt="" />
+              <span>
+                “젤리의 이야기를 들어주면
+                <br />
+                마음이 조금씩 원래 모습으로 돌아와요.”
+              </span>
+            </div>
+          </article>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <main className="game-shell">
@@ -489,7 +649,7 @@ export default function App() {
         <div className="stat-card coin-card">
           <span className="coin">J</span>
           <span>×</span>
-          <strong>120</strong>
+          <strong>{coins}</strong>
         </div>
         <button
           className="pause-button"
@@ -538,9 +698,18 @@ export default function App() {
                       ? "보건실이 다시 평화로워졌어요."
                       : "각도를 바꿔 다시 도전해 보세요."}
                 </p>
-                <button onClick={paused ? () => setPaused(false) : restart}>
-                  {paused ? "계속하기" : "다시 도전"}
+                <button
+                  onClick={
+                    paused
+                      ? () => setPaused(false)
+                      : status === "won"
+                        ? () => setView("collection")
+                        : restart
+                  }
+                >
+                  {paused ? "계속하기" : status === "won" ? "젤리 도감으로" : "다시 도전"}
                 </button>
+                {status === "won" && <span className="clear-reward">클리어 보상 +30 코인</span>}
               </div>
             </div>
           )}
