@@ -56,6 +56,15 @@ const WEAPONS: {
 
 const shotsFor = (weapon: WeaponId) => BASE_SHOTS + (weapon === "bbgun" ? 3 : 0);
 
+// How each weapon looks on the board: launcher tint + aim-line style.
+const WEAPON_LOOK: Record<WeaponId, { base: string; aim: string; dash: number[]; width: number }> =
+  {
+    blaster: { base: "#eee9fa", aim: "rgba(255,255,255,.75)", dash: [2, 13], width: 2 },
+    bbgun: { base: "#cfe0ff", aim: "#a9caff", dash: [1, 8], width: 4 },
+    sword: { base: "#e4fbc4", aim: "#c8f57a", dash: [14, 9], width: 4 },
+    rainbow: { base: "#fde6f6", aim: "rainbow", dash: [10, 6], width: 5 },
+  };
+
 const readWeapon = (): WeaponId => {
   try {
     const saved = localStorage.getItem("jelly-weapon");
@@ -802,10 +811,19 @@ export default function App() {
         let vx = Math.cos(angle);
         const vy = Math.sin(angle);
         let hit = false;
+        const look = WEAPON_LOOK[equippedRef.current];
         ctx.fillStyle = "rgba(255,255,255,.9)";
-        ctx.strokeStyle = "rgba(255,255,255,.75)";
-        ctx.lineWidth = 2;
-        ctx.setLineDash([2, 13]);
+        if (look.aim === "rainbow") {
+          const rainbow = ctx.createLinearGradient(originX, originY, originX, 40);
+          ["#ef655d", "#f5d95a", "#8fcb66", "#75a8ed", "#8c5bd8"].forEach((c, i) =>
+            rainbow.addColorStop(i / 4, c),
+          );
+          ctx.strokeStyle = rainbow;
+        } else {
+          ctx.strokeStyle = look.aim;
+        }
+        ctx.lineWidth = look.width;
+        ctx.setLineDash(look.dash);
         ctx.lineCap = "round";
         ctx.beginPath();
         ctx.moveTo(x, y);
@@ -844,7 +862,7 @@ export default function App() {
       ctx.beginPath();
       ctx.roundRect(-67, -28, 134, 60, 28);
       ctx.fill();
-      ctx.fillStyle = "#eee9fa";
+      ctx.fillStyle = WEAPON_LOOK[equippedRef.current].base;
       ctx.beginPath();
       ctx.roundRect(-60, -32, 120, 56, 25);
       ctx.fill();
@@ -924,9 +942,14 @@ export default function App() {
 
   const buyWeapon = (id: WeaponId) => {
     const weapon = WEAPONS.find((w) => w.id === id)!;
-    // If no shot has been fired this round, the new weapon applies right away.
-    const applyNow = () =>
-      setShots((s) => (s === shotsFor(equippedRef.current) ? shotsFor(id) : s));
+    // The new weapon applies immediately, even mid-round (shot bonus is swapped in).
+    const applyNow = () => {
+      const delta = shotsFor(id) - shotsFor(equippedRef.current);
+      if (delta !== 0 && statusRef.current === "playing") {
+        setShots((s) => Math.max(1, s + delta));
+      }
+      equippedRef.current = id;
+    };
     if (ownedWeapons.has(id)) {
       applyNow();
       setEquippedWeapon(id);
@@ -993,12 +1016,7 @@ export default function App() {
             {!isUnlocked && (
               <span className="lock-mark" aria-label="잠김">
                 <svg viewBox="0 0 20 22" aria-hidden="true">
-                  <path
-                    d="M5 10V7a5 5 0 0 1 10 0v3"
-                    fill="none"
-                    stroke="#2d2752"
-                    strokeWidth="3"
-                  />
+                  <path d="M5 10V7a5 5 0 0 1 10 0v3" fill="none" stroke="#2d2752" strokeWidth="3" />
                   <rect x="2" y="10" width="16" height="11" rx="2" fill="#2d2752" />
                   <rect x="9" y="13" width="2" height="5" fill="#f6c445" />
                 </svg>
@@ -1317,6 +1335,16 @@ export default function App() {
             <strong>{shots}</strong>
             <span className="mini-capsule" />
           </div>
+          <button className="equipped-chip" onClick={openShop} title="무기 상점 열기">
+            <span className="weapon-icon">
+              <WeaponIcon id={equippedWeapon} />
+            </span>
+            <span>
+              <small>장착 무기</small>
+              <strong>{WEAPONS.find((w) => w.id === equippedWeapon)!.name}</strong>
+              <em>{WEAPONS.find((w) => w.id === equippedWeapon)!.effect}</em>
+            </span>
+          </button>
           <Doctor />
         </aside>
 
