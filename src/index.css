@@ -2912,3 +2912,16 @@
     font-size: 17px;
   }
 }
+
+/* ---------- Pixel rendering for images ---------- */
+.game-canvas {
+  image-rendering: pixelated;
+}
+.weapon-icon svg,
+.doctor,
+.card-jelly > img,
+.story-jelly > img,
+.shop-hero img,
+.teacher-note img {
+  image-rendering: pixelated;
+}

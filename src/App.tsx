@@ -74,113 +74,115 @@ const readWeapon = (): WeaponId => {
   }
 };
 
+// 16x16 pixel-art weapon sprites. Rows list fill colours only ("." = empty);
+// the dark outline is generated around every filled pixel so it stays crisp.
+const PIXEL_PALETTE: Record<string, string> = {
+  w: "#ffffff",
+  g: "#c9d8f5",
+  s: "#d6d1ea",
+  b: "#75a8ed",
+  d: "#4b78bd",
+  p: "#ef729e",
+  y: "#f5d95a",
+  o: "#f0a94c",
+  r: "#ef655d",
+  G: "#9fdc5a",
+  v: "#8c5bd8",
+  m: "#5f5880",
+};
+const WEAPON_SPRITES: Record<WeaponId, string[]> = {
+  blaster: [
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "..wwwwwwwwwwg...",
+    "..wbbwwppwwwgbb.",
+    "..wbbwwppwwwgbb.",
+    "..wwwwwwwwwwg...",
+    ".....ggg........",
+    ".....ggg........",
+    "....ggg.........",
+    "....ggg.........",
+    "................",
+    "................",
+    "................",
+  ],
+  bbgun: [
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "..bbbbbbbbbbbs..",
+    "..bwwbbbbbbbbs..",
+    "..dddddddddddd..",
+    "....ddd..d......",
+    "....ddd.dd......",
+    "...ddd..........",
+    "...ddd..........",
+    "...ddd..........",
+    "................",
+    "................",
+    "................",
+  ],
+  sword: [
+    "................",
+    ".............GG.",
+    "............GwG.",
+    "...........GwG..",
+    "..........GwG...",
+    ".........GwG....",
+    "........GwG.....",
+    ".......GGG......",
+    ".....yyyy.......",
+    ".....ypy........",
+    "....pp..........",
+    "...pp...........",
+    "..yy............",
+    "................",
+    "................",
+    "................",
+  ],
+  rainbow: [
+    "................",
+    ".............rr.",
+    "............ror.",
+    "...........oyo..",
+    "..........yGy...",
+    ".........GbG....",
+    "........bvb.....",
+    ".......vvv......",
+    ".....ssss.......",
+    ".....sms........",
+    "....mm..........",
+    "...mm...........",
+    "..ss............",
+    "................",
+    "................",
+    "................",
+  ],
+};
+
 function WeaponIcon({ id }: { id: WeaponId }) {
-  if (id === "bbgun") {
-    return (
-      <svg viewBox="0 0 64 64" aria-hidden="true">
-        <rect
-          x="8"
-          y="22"
-          width="40"
-          height="12"
-          rx="3"
-          fill="#75a8ed"
-          stroke="#393463"
-          strokeWidth="3"
-        />
-        <rect
-          x="46"
-          y="25"
-          width="12"
-          height="6"
-          rx="2"
-          fill="#c9d8f5"
-          stroke="#393463"
-          strokeWidth="3"
-        />
-        <path
-          d="M16 34h12l-4 18h-10z"
-          fill="#4b78bd"
-          stroke="#393463"
-          strokeWidth="3"
-          strokeLinejoin="round"
-        />
-        <circle cx="38" cy="28" r="3" fill="#fff" />
-      </svg>
-    );
-  }
-  if (id === "sword") {
-    return (
-      <svg viewBox="0 0 64 64" aria-hidden="true">
-        <path
-          d="M46 6l8 4-26 30-6-6z"
-          fill="#b8f06a"
-          stroke="#393463"
-          strokeWidth="3"
-          strokeLinejoin="round"
-        />
-        <path d="M14 36l14 14" stroke="#393463" strokeWidth="9" strokeLinecap="round" />
-        <path d="M14 36l14 14" stroke="#ef729e" strokeWidth="4" strokeLinecap="round" />
-        <path d="M12 52l6-6" stroke="#393463" strokeWidth="8" strokeLinecap="round" />
-        <path d="M12 52l6-6" stroke="#f5d95a" strokeWidth="3" strokeLinecap="round" />
-      </svg>
-    );
-  }
-  if (id === "rainbow") {
-    return (
-      <svg viewBox="0 0 64 64" aria-hidden="true">
-        <defs>
-          <linearGradient id="rainbow-blade" x1="0" y1="1" x2="1" y2="0">
-            <stop offset="0" stopColor="#ef655d" />
-            <stop offset=".35" stopColor="#f5d95a" />
-            <stop offset=".65" stopColor="#8fcb66" />
-            <stop offset="1" stopColor="#8c5bd8" />
-          </linearGradient>
-        </defs>
-        <path
-          d="M24 40L52 8l4 4-28 32z"
-          fill="url(#rainbow-blade)"
-          stroke="#393463"
-          strokeWidth="3"
-          strokeLinejoin="round"
-        />
-        <path d="M16 38l10 10" stroke="#393463" strokeWidth="6" strokeLinecap="round" />
-        <path d="M10 54l10-10" stroke="#393463" strokeWidth="8" strokeLinecap="round" />
-        <path d="M10 54l10-10" stroke="#d6d1ea" strokeWidth="3" strokeLinecap="round" />
-      </svg>
-    );
+  const rows = WEAPON_SPRITES[id];
+  const filled = (x: number, y: number) => rows[y]?.[x] !== undefined && rows[y][x] !== ".";
+  const pixels: { x: number; y: number; c: string }[] = [];
+  for (let y = 0; y < 16; y++) {
+    for (let x = 0; x < 16; x++) {
+      if (filled(x, y)) {
+        pixels.push({ x, y, c: PIXEL_PALETTE[rows[y][x]] });
+      } else if (filled(x - 1, y) || filled(x + 1, y) || filled(x, y - 1) || filled(x, y + 1)) {
+        pixels.push({ x, y, c: "#2d2752" });
+      }
+    }
   }
   return (
-    <svg viewBox="0 0 64 64" aria-hidden="true">
-      <rect
-        x="10"
-        y="20"
-        width="38"
-        height="16"
-        rx="8"
-        fill="#fff"
-        stroke="#393463"
-        strokeWidth="3"
-      />
-      <rect
-        x="46"
-        y="23"
-        width="10"
-        height="10"
-        rx="3"
-        fill="#75a8ed"
-        stroke="#393463"
-        strokeWidth="3"
-      />
-      <circle cx="22" cy="28" r="4" fill="#75a8ed" />
-      <circle cx="34" cy="28" r="4" fill="#ef729e" />
-      <path
-        d="M18 36h10l-3 16h-9z"
-        fill="#c9d8f5"
-        stroke="#393463"
-        strokeWidth="3"
-        strokeLinejoin="round"
-      />
+    <svg viewBox="0 0 16 16" shapeRendering="crispEdges" aria-hidden="true">
+      {pixels.map(({ x, y, c }) => (
+        <rect key={`${x}-${y}`} x={x} y={y} width="1.02" height="1.02" fill={c} />
+      ))}
     </svg>
   );
 }
@@ -545,11 +547,14 @@ export default function App() {
     };
 
     const resize = () => {
+      // Pixel-art look: draw the board at low resolution, then let CSS scale it
+      // up with `image-rendering: pixelated` so every pixel stays a crisp block.
       const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      ctx.setTransform((rect.width / W) * dpr, 0, 0, (rect.height / H) * dpr, 0, 0);
+      const PIXEL_SIZE = 2.5;
+      canvas.width = Math.max(1, Math.round(rect.width / PIXEL_SIZE));
+      canvas.height = Math.max(1, Math.round(rect.height / PIXEL_SIZE));
+      ctx.setTransform(canvas.width / W, 0, 0, canvas.height / H, 0, 0);
+      ctx.imageSmoothingEnabled = false;
     };
 
     const drawPixelCloud = (x: number, y: number, scale = 1) => {
