@@ -154,7 +154,7 @@ const cellCenter = (row: number, col: number) => ({
 function initialBubbles(stage = 1) {
   const bubbles: Bubble[] = [];
   let id = 1;
-  const stageRows = Math.min(5 + Math.floor((stage - 1) / 3), 7);
+  const stageRows = 3;
   for (let row = 0; row < stageRows; row++) {
     const count = row % 2 ? 10 : 11;
     for (let col = 0; col < count; col++) {
@@ -163,7 +163,7 @@ function initialBubbles(stage = 1) {
         id: id++,
         x,
         y,
-        color: (row * 3 + col * 2 + Math.floor(col / 3)) % 6,
+        color: (row * 3 + col * 2 + Math.floor(col / 3) + stage - 1) % 4,
         heart: (row + col) % 7 === 3,
       });
     }
@@ -215,11 +215,11 @@ function Doctor() {
 export default function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [, setScore] = useState(12340);
-  const [shots, setShots] = useState(24);
+  const [shots, setShots] = useState(50);
   const [paused, setPaused] = useState(false);
   const [status, setStatus] = useState<GameStatus>("playing");
-  const [currentColor, setCurrentColor] = useState(5);
-  const [nextColor, setNextColor] = useState(5);
+  const [currentColor, setCurrentColor] = useState(0);
+  const [nextColor, setNextColor] = useState(0);
   const [combo, setCombo] = useState(2);
   const [gameKey, setGameKey] = useState(0);
   const [stage, setStage] = useState(1);
@@ -241,11 +241,11 @@ export default function App() {
 
   const restart = useCallback(() => {
     setScore(12340);
-    setShots(24);
+    setShots(50);
     setPaused(false);
     setStatus("playing");
-    setCurrentColor(5);
-    setNextColor(5);
+    setCurrentColor(0);
+    setNextColor(0);
     setCombo(2);
     setGameKey((v) => v + 1);
   }, []);
@@ -260,8 +260,8 @@ export default function App() {
     let projectile: (Bubble & { vx: number; vy: number }) | null = null;
     let aimX = W / 2;
     let aimY = 330;
-    let current = 5;
-    let next = 5;
+    let current = 0;
+    let next = 0;
     let id = 1000;
     let raf = 0;
     let last = performance.now();
@@ -367,7 +367,7 @@ export default function App() {
         nearestNeighbors(b).forEach((n) => queue.push(n));
       }
 
-      if (cluster.length < 3) return;
+      if (cluster.length < 2) return;
       const removed = new Set(cluster.map((b) => b.id));
       const connected = new Set<number>();
       const topQueue = bubbles.filter((b) => b.y < 82 && !removed.has(b.id));
@@ -465,7 +465,7 @@ export default function App() {
       const origin = { x: W / 2, y: 641 };
       const angle = Math.atan2(Math.min(p.y, 590) - origin.y, p.x - origin.x);
       if (Math.sin(angle) > -0.18) return;
-      const speed = 650;
+      const speed = 560;
       projectile = {
         id: id++,
         x: origin.x,
@@ -517,7 +517,7 @@ export default function App() {
           }
           const collision =
             projectile.y < R + 5 ||
-            bubbles.some((b) => Math.hypot(b.x - projectile!.x, b.y - projectile!.y) < R * 1.88);
+            bubbles.some((b) => Math.hypot(b.x - projectile!.x, b.y - projectile!.y) < R * 2.08);
           if (collision) attachProjectile();
         }
       }
@@ -529,7 +529,7 @@ export default function App() {
       if (!projectile && statusRef.current === "playing") {
         const angle = Math.atan2(aimY - originY, aimX - originX);
         ctx.fillStyle = "#f39ac3";
-        for (let d = 65; d < 245; d += 36) {
+        for (let d = 60; d < 345; d += 32) {
           const px = originX + Math.cos(angle) * d;
           const py = originY + Math.sin(angle) * d;
           if (py < 40) break;

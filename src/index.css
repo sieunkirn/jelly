@@ -230,9 +230,9 @@
   background: linear-gradient(120deg, #fffdf8, #fff4d2);
 }
 .stage-card::after {
-  content: "EASY";
+  content: "SUPER EASY";
   position: absolute;
-  right: 11px;
+  right: 8px;
   top: -11px;
   padding: 3px 8px;
   border: 3px solid var(--ink);
@@ -240,7 +240,7 @@
   color: white;
   background: #ef729e;
   font:
-    900 10px/1 "Nunito",
+    900 9px/1 "Nunito",
     sans-serif;
   letter-spacing: 0.6px;
 }
