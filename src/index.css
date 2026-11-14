@@ -2913,10 +2913,7 @@
   }
 }
 
-/* ---------- Pixel rendering for images ---------- */
-.game-canvas {
-  image-rendering: pixelated;
-}
+/* ---------- Pixel rendering for images (board stays full resolution) ---------- */
 .weapon-icon svg,
 .doctor,
 .card-jelly > img,
@@ -2945,4 +2942,64 @@
   .doctor {
     animation: none;
   }
+}
+
+/* ---------- 홍인표의 보호막: iridescent aura around 안은영 ---------- */
+.doctor.shielded {
+  filter: drop-shadow(0 0 10px rgba(199, 155, 255, 0.95)) drop-shadow(0 0 26px rgba(255, 140, 205, 0.7))
+    drop-shadow(0 0 48px rgba(140, 200, 255, 0.45));
+  animation:
+    doctor-equip 0.35s ease-out,
+    shield-shimmer 3.2s ease-in-out infinite;
+}
+@keyframes shield-shimmer {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 10px rgba(199, 155, 255, 0.95))
+      drop-shadow(0 0 26px rgba(255, 140, 205, 0.7)) drop-shadow(0 0 48px rgba(140, 200, 255, 0.45));
+  }
+  50% {
+    filter: drop-shadow(0 0 14px rgba(150, 210, 255, 0.95))
+      drop-shadow(0 0 32px rgba(199, 155, 255, 0.75)) drop-shadow(0 0 56px rgba(255, 150, 210, 0.5));
+  }
+}
+.shield-charges {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+  padding: 3px 9px;
+  border: 2px solid #8c5bd8;
+  border-radius: 6px;
+  color: #6441ac;
+  background: #f3e8ff;
+  font-size: 14px;
+  font-weight: 800;
+}
+.shield-charges i {
+  width: 11px;
+  height: 11px;
+  border: 2px solid #8c5bd8;
+  border-radius: 50%;
+  background: transparent;
+}
+.shield-charges i.on {
+  background: radial-gradient(circle at 35% 35%, #fff 0 25%, #c79bff 30%, #ff8cc8 100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .doctor.shielded {
+    animation: none;
+  }
+}
+@media (min-width: 1051px) {
+  .shop-content {
+    max-width: 1240px;
+  }
+  .weapon-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+  }
+}
+.shop-doctor.shielded {
+  filter: drop-shadow(0 0 6px rgba(199, 155, 255, 0.95)) drop-shadow(0 0 16px rgba(255, 140, 205, 0.7));
 }

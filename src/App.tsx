@@ -11,7 +11,7 @@ type Bubble = {
 
 type GameStatus = "playing" | "won" | "lost";
 type View = "game" | "collection" | "shop";
-type WeaponId = "blaster" | "bbgun" | "sword" | "rainbow";
+type WeaponId = "blaster" | "bbgun" | "sword" | "rainbow" | "shield";
 
 // Coins unlock a jelly's story without clearing its stage.
 const JELLY_PRICE = 60;
@@ -52,7 +52,17 @@ const WEAPONS: {
     effect: "젤리 6개 이상 터뜨리면 발사 +1",
     description: "은영의 기운을 가득 담은 최종 무기. 크게 터뜨릴수록 힘이 돌아온다.",
   },
+  {
+    id: "shield",
+    name: "홍인표의 보호막",
+    price: 200,
+    effect: "빗나간 발사 3번까지 횟수 보호",
+    description:
+      "홍인표 선생님을 감싸고 있는 신비한 보호막. 손을 잡으면 은영의 힘이 다시 채워진다.",
+  },
 ];
+
+const SHIELD_CHARGES = 3;
 
 const shotsFor = (weapon: WeaponId) => BASE_SHOTS + (weapon === "bbgun" ? 3 : 0);
 
@@ -63,6 +73,7 @@ const WEAPON_LOOK: Record<WeaponId, { base: string; aim: string; dash: number[];
     bbgun: { base: "#cfe0ff", aim: "#a9caff", dash: [1, 8], width: 4 },
     sword: { base: "#e4fbc4", aim: "#c8f57a", dash: [14, 9], width: 4 },
     rainbow: { base: "#fde6f6", aim: "rainbow", dash: [10, 6], width: 5 },
+    shield: { base: "#efe0ff", aim: "#c79bff", dash: [6, 6], width: 4 },
   };
 
 const readWeapon = (): WeaponId => {
@@ -161,6 +172,24 @@ const WEAPON_SPRITES: Record<WeaponId, string[]> = {
     "..ss............",
     "................",
     "................",
+    "................",
+  ],
+  shield: [
+    "................",
+    ".....vvvvvv.....",
+    "...vvppppppvv...",
+    "..vppwwppppppv..",
+    "..vpwwpppppppv..",
+    ".vppwppppppppbv.",
+    ".vppppppppppbbv.",
+    ".vpppppppppbbbv.",
+    ".vpppppppppbbbv.",
+    ".vppppppppbbbbv.",
+    ".vpppppppbbbbbv.",
+    "..vppppbbbbbbv..",
+    "..vppbbbbbbbbv..",
+    "...vvbbbbbbvv...",
+    ".....vvvvvv.....",
     "................",
   ],
 };
@@ -413,6 +442,7 @@ const DOCTOR_IMAGES: Record<WeaponId, string> = {
   bbgun: "./doctor-bbgun.png",
   sword: "./doctor-sword.png",
   rainbow: "./doctor-rainbow.png",
+  shield: "./doctor.png",
 };
 
 function Doctor({ weapon }: { weapon: WeaponId }) {
@@ -420,7 +450,7 @@ function Doctor({ weapon }: { weapon: WeaponId }) {
   return (
     <img
       key={weapon}
-      className="doctor"
+      className={`doctor ${weapon === "shield" ? "shielded" : ""}`}
       src={DOCTOR_IMAGES[weapon]}
       alt={`${name}을(를) 든 픽셀 아트 보건교사 안은영`}
       title={`장착 무기: ${name}`}
@@ -442,6 +472,7 @@ export default function App() {
     }
   });
   const [shopMessage, setShopMessage] = useState("");
+  const [shieldCharges, setShieldCharges] = useState(SHIELD_CHARGES);
   const equippedRef = useRef(equippedWeapon);
   const [shots, setShots] = useState(() => shotsFor(readWeapon()));
   const [paused, setPaused] = useState(false);
@@ -548,6 +579,10 @@ export default function App() {
     let raf = 0;
     let last = performance.now();
     let burst = 0;
+    let burstText = "NICE!";
+    // 홍인표의 보호막: missed shots this round that will not cost a shot
+    let shieldLeft = SHIELD_CHARGES;
+    setShieldCharges(SHIELD_CHARGES);
 
     const randomAvailableColor = () => {
       const present = [...new Set(bubbles.map((b) => b.color))];
@@ -558,14 +593,12 @@ export default function App() {
     };
 
     const resize = () => {
-      // Pixel-art look: draw the board at low resolution, then let CSS scale it
-      // up with `image-rendering: pixelated` so every pixel stays a crisp block.
+      // Full-resolution board (sharp on high-DPI screens).
       const rect = canvas.getBoundingClientRect();
-      const PIXEL_SIZE = 2.5;
-      canvas.width = Math.max(1, Math.round(rect.width / PIXEL_SIZE));
-      canvas.height = Math.max(1, Math.round(rect.height / PIXEL_SIZE));
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.max(1, Math.round(rect.width * dpr));
+      canvas.height = Math.max(1, Math.round(rect.height * dpr));
       ctx.setTransform(canvas.width / W, 0, 0, canvas.height / H, 0, 0);
-      ctx.imageSmoothingEnabled = false;
     };
 
     const drawPixelCloud = (x: number, y: number, scale = 1) => {
@@ -654,7 +687,7 @@ export default function App() {
 
       if (cluster.length < 3) {
         setCombo(0);
-        return;
+        return false;
       }
       const removed = new Set(cluster.map((b) => b.id));
       const connected = new Set<number>();
@@ -675,6 +708,7 @@ export default function App() {
       setScore((s) => s + earned);
       setCombo((previous) => Math.min(9, previous + 1));
       burst = 1;
+      burstText = "NICE!";
       // 무지개 광선검: a big pop gives one shot back.
       if (equippedRef.current === "rainbow" && removed.size >= 6) setShots((s) => s + 1);
       if (bubbles.length === 0) {
@@ -691,6 +725,7 @@ export default function App() {
           return nextUnlocked;
         });
       }
+      return true;
     };
 
     const attachProjectile = () => {
@@ -716,7 +751,15 @@ export default function App() {
       };
       bubbles.push(placed);
       projectile = null;
-      resolveMatches(placed);
+      const popped = resolveMatches(placed);
+      // 홍인표의 보호막 blocks a missed shot: it does not cost a shot.
+      const shielded = !popped && equippedRef.current === "shield" && shieldLeft > 0;
+      if (shielded) {
+        shieldLeft -= 1;
+        setShieldCharges(shieldLeft);
+        burst = 1;
+        burstText = "보호막!";
+      }
       // Never load a color that is no longer on the board (no wasted demo shots).
       const isPresent = (color: number) => bubbles.some((b) => b.color === color);
       current = isPresent(next) ? next : randomAvailableColor();
@@ -724,7 +767,7 @@ export default function App() {
       setCurrentColor(current);
       setNextColor(next);
       setShots((s) => {
-        const remaining = s - 1;
+        const remaining = shielded ? s : s - 1;
         if (remaining <= 0 && bubbles.length > 0) {
           statusRef.current = "lost";
           setStatus("lost");
@@ -916,7 +959,7 @@ export default function App() {
         ctx.fillStyle = "#fff6a3";
         ctx.font = "900 34px Jua, sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText("NICE!", W / 2, 390 - (1 - burst) * 35);
+        ctx.fillText(burstText, W / 2, 390 - (1 - burst) * 35);
         ctx.restore();
       }
       raf = requestAnimationFrame(draw);
@@ -1236,7 +1279,7 @@ export default function App() {
           <div className="shop-hero paper-card">
             <img
               key={equippedWeapon}
-              className="shop-doctor"
+              className={`shop-doctor ${equippedWeapon === "shield" ? "shielded" : ""}`}
               src={DOCTOR_IMAGES[equippedWeapon]}
               alt={`${equipped.name}을(를) 든 보건교사 안은영`}
               draggable={false}
@@ -1355,6 +1398,14 @@ export default function App() {
             <span className="tape" />
             <small>남은 발사 횟수</small>
             <strong>{shots}</strong>
+            {equippedWeapon === "shield" && (
+              <span className="shield-charges" aria-label={`보호막 ${shieldCharges}회 남음`}>
+                보호막
+                {Array.from({ length: SHIELD_CHARGES }, (_, i) => (
+                  <i key={i} className={i < shieldCharges ? "on" : ""} />
+                ))}
+              </span>
+            )}
             <span className="mini-capsule" />
           </div>
           <Doctor weapon={equippedWeapon} />
