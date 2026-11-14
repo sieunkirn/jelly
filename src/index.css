@@ -3035,3 +3035,94 @@
   min-width: 220px;
   letter-spacing: 1px;
 }
+
+/* ---------- 거위 상점: goose shopkeeper replaces the NOW EQUIPPED block ---------- */
+.goose-shop {
+  grid-template-columns: 170px 1fr;
+  align-items: end;
+  padding: 18px 28px 0;
+  overflow: hidden;
+}
+.goose-keeper {
+  position: relative;
+  height: 170px;
+}
+.goose-sprite {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  width: 150px;
+  height: 150px;
+  translate: -50% 0;
+  animation: goose-bob 2.4s steps(2) infinite;
+}
+.goose-counter {
+  position: absolute;
+  left: -28px;
+  right: -12px;
+  bottom: 0;
+  height: 26px;
+  border-top: 3px solid var(--ink);
+  background: repeating-linear-gradient(90deg, #c99a6a 0 22px, #b8875a 22px 24px);
+}
+@keyframes goose-bob {
+  50% {
+    translate: -50% -3px;
+  }
+}
+.goose-talk {
+  align-self: center;
+  padding-bottom: 18px;
+}
+.goose-bubble {
+  position: relative;
+  margin: 10px 0 0;
+  padding: 14px 18px;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  color: var(--ink);
+  background: #fff;
+  box-shadow: 4px 4px 0 rgba(45, 39, 82, 0.25);
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.goose-bubble::before {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 22px;
+  border: 7px solid transparent;
+  border-right: 10px solid var(--ink);
+}
+.goose-bubble::after {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 25px;
+  border: 4px solid transparent;
+  border-right: 7px solid #fff;
+}
+@media (max-width: 760px) {
+  .goose-shop {
+    grid-template-columns: 96px 1fr;
+    padding: 12px 14px 0;
+  }
+  .goose-keeper {
+    height: 110px;
+  }
+  .goose-sprite {
+    width: 96px;
+    height: 96px;
+    bottom: 16px;
+  }
+  .goose-bubble {
+    font-size: 15px;
+    padding: 10px 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .goose-sprite {
+    animation: none;
+  }
+}

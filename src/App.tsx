@@ -100,7 +100,38 @@ const PIXEL_PALETTE: Record<string, string> = {
   G: "#9fdc5a",
   v: "#8c5bd8",
   m: "#5f5880",
+  k: "#2d2752",
+  c: "#ef655d",
+  n: "#e4dff0",
 };
+
+// 거위 상점 주인: white goose in a pink infirmary apron (fills only; outline is generated)
+const GOOSE_SPRITE = [
+  "........................",
+  "............wwww........",
+  "...........wwwwww.......",
+  "...........wwkwwww......",
+  "...........wwwwwwoooo...",
+  "...........wwwwwwooo....",
+  "............wwwwww......",
+  ".............wwww.......",
+  ".............wwww.......",
+  ".............wwww.......",
+  "............wwwww.......",
+  "..ww.......wwwwww.......",
+  ".wwww....wwwwwwwww......",
+  ".wwwwwwwwwwwwwwwwww.....",
+  "..wwwwwnnwwwwppppwww....",
+  "..wwwnnnwwwwppcpppww....",
+  "...wwnnwwwwpcccppww.....",
+  "...wwwwwwwwppcpppww.....",
+  "....wwwwwwwpppppww......",
+  ".....wwwwwwwppppw.......",
+  "........oo....oo........",
+  ".......ooo...ooo........",
+  "........................",
+  "........................",
+];
 const WEAPON_SPRITES: Record<WeaponId, string[]> = {
   blaster: [
     "................",
@@ -199,11 +230,19 @@ function WeaponIcon({ id }: { id: WeaponId }) {
   if (id === "shield") {
     return <img className="weapon-img" src="./shield.png" alt="" draggable={false} />;
   }
-  const rows = WEAPON_SPRITES[id];
-  const filled = (x: number, y: number) => rows[y]?.[x] !== undefined && rows[y][x] !== ".";
+  return <PixelSprite rows={WEAPON_SPRITES[id]} />;
+}
+
+function PixelSprite({ rows, className }: { rows: string[]; className?: string }) {
+  const height = rows.length;
+  const width = Math.max(...rows.map((r) => r.length));
+  const filled = (x: number, y: number) => {
+    const ch = rows[y]?.[x];
+    return ch !== undefined && ch !== ".";
+  };
   const pixels: { x: number; y: number; c: string }[] = [];
-  for (let y = 0; y < 16; y++) {
-    for (let x = 0; x < 16; x++) {
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
       if (filled(x, y)) {
         pixels.push({ x, y, c: PIXEL_PALETTE[rows[y][x]] });
       } else if (filled(x - 1, y) || filled(x + 1, y) || filled(x, y - 1) || filled(x, y + 1)) {
@@ -212,7 +251,12 @@ function WeaponIcon({ id }: { id: WeaponId }) {
     }
   }
   return (
-    <svg viewBox="0 0 16 16" shapeRendering="crispEdges" aria-hidden="true">
+    <svg
+      className={className}
+      viewBox={`0 0 ${width} ${height}`}
+      shapeRendering="crispEdges"
+      aria-hidden="true"
+    >
       {pixels.map(({ x, y, c }) => (
         <rect key={`${x}-${y}`} x={x} y={y} width="1.02" height="1.02" fill={c} />
       ))}
@@ -1104,18 +1148,18 @@ export default function App() {
     if (ownedWeapons.has(id)) {
       applyNow();
       setEquippedWeapon(id);
-      setShopMessage(`${weapon.name} 장착!`);
+      setShopMessage(`${weapon.name} 장착 완료! 잘 어울리네, 꽉!`);
       return;
     }
     if (coins < weapon.price) {
-      setShopMessage(`코인이 ${weapon.price - coins}개 부족해요.`);
+      setShopMessage(`꽉… 코인이 ${weapon.price - coins}개 모자라. 젤리를 더 잡아 와!`);
       return;
     }
     setCoins((value) => value - weapon.price);
     setOwnedWeapons((current) => new Set(current).add(id));
     applyNow();
     setEquippedWeapon(id);
-    setShopMessage(`${weapon.name} 구매 완료! 바로 장착했어요.`);
+    setShopMessage(`꽉꽉! ${weapon.name}, 좋은 선택이야. 바로 장착해 뒀어!`);
   };
 
   const openShop = () => {
@@ -1365,29 +1409,19 @@ export default function App() {
             <strong>{coins}</strong>
           </div>
         </header>
-        {shopMessage && <div className="shop-toast">{shopMessage}</div>}
 
         <section className="shop-content">
-          <div className="shop-hero paper-card">
-            <img
-              key={equippedWeapon}
-              className={`shop-doctor ${equippedWeapon === "shield" ? "shielded" : ""}`}
-              src={DOCTOR_IMAGES[equippedWeapon]}
-              alt={`${equipped.name}을(를) 든 보건교사 안은영`}
-              draggable={false}
-            />
-            <div>
-              <span className="story-label">NOW EQUIPPED</span>
-              <div className="shop-equipped">
-                <span className="weapon-icon">
-                  <WeaponIcon id={equipped.id} />
-                </span>
-                <div>
-                  <strong>{equipped.name}</strong>
-                  <small>{equipped.effect}</small>
-                </div>
-              </div>
-              <p>“무기는 장난감처럼 보여도 괜찮아. 중요한 건 누가 쥐고 있느냐니까.”</p>
+          <div className="shop-hero goose-shop paper-card">
+            <div className="goose-keeper">
+              <PixelSprite rows={GOOSE_SPRITE} className="goose-sprite" />
+              <span className="goose-counter" />
+            </div>
+            <div className="goose-talk">
+              <span className="story-label">거위 상점</span>
+              <p className="goose-bubble" aria-live="polite">
+                {shopMessage ||
+                  `꽉! 어서 와, 은영. 지금 쥐고 있는 건 ${equipped.name}네. 오늘은 뭘 사 갈 거야?`}
+              </p>
             </div>
           </div>
 
