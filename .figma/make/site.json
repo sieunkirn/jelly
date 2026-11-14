@@ -1,1 +1,10 @@
-{}
+{
+  "description": "Play a fully functional bubble shooter with an interface that matches the reference design, offering an engaging arcade challenge for casual gamers.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
