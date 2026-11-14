@@ -16,6 +16,7 @@ const imageAssets = [
   "doctor-bbgun.png",
   "doctor-sword.png",
   "doctor-rainbow.png",
+  "shield.png",
   ...["bug", "octopus", "toad", "moss", "twoleg", "jellyfish", "heart", "whale"].map(
     (name) => `jellies/${name}.png`,
   ),

@@ -195,6 +195,10 @@ const WEAPON_SPRITES: Record<WeaponId, string[]> = {
 };
 
 function WeaponIcon({ id }: { id: WeaponId }) {
+  // 홍인표의 보호막 uses the supplied pixel-art bubble image.
+  if (id === "shield") {
+    return <img className="weapon-img" src="./shield.png" alt="" draggable={false} />;
+  }
   const rows = WEAPON_SPRITES[id];
   const filled = (x: number, y: number) => rows[y]?.[x] !== undefined && rows[y][x] !== ".";
   const pixels: { x: number; y: number; c: string }[] = [];

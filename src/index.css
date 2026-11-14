@@ -3007,3 +3007,11 @@
 .game-toast {
   bottom: 64px;
 }
+/* supplied image icon (홍인표의 보호막) — slightly larger than the circle so the bubble reads */
+.weapon-icon .weapon-img {
+  width: 118%;
+  height: 118%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  user-select: none;
+}
