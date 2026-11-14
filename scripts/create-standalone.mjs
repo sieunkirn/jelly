@@ -13,6 +13,9 @@ if (!scriptPath || !stylePath) {
 let js = await readFile(path.join(distDir, scriptPath.replace(/^\/+/, "")), "utf8");
 const imageAssets = [
   "doctor.png",
+  "doctor-bbgun.png",
+  "doctor-sword.png",
+  "doctor-rainbow.png",
   ...["bug", "octopus", "toad", "moss", "twoleg", "jellyfish", "heart", "whale"].map(
     (name) => `jellies/${name}.png`,
   ),

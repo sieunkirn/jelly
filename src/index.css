@@ -2925,3 +2925,24 @@
 .teacher-note img {
   image-rendering: pixelated;
 }
+
+/* 안은영 swaps weapons: small hop when the image changes */
+.doctor {
+  animation: doctor-equip 0.35s ease-out;
+}
+@keyframes doctor-equip {
+  0% {
+    translate: 0 6px;
+  }
+  60% {
+    translate: 0 -6px;
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .doctor {
+    animation: none;
+  }
+}

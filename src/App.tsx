@@ -407,12 +407,23 @@ function JellyPreview({ color, heart = false }: { color: number; heart?: boolean
   );
 }
 
-function Doctor() {
+// 안은영 holding each weapon (the blaster in doctor.png recoloured per weapon).
+const DOCTOR_IMAGES: Record<WeaponId, string> = {
+  blaster: "./doctor.png",
+  bbgun: "./doctor-bbgun.png",
+  sword: "./doctor-sword.png",
+  rainbow: "./doctor-rainbow.png",
+};
+
+function Doctor({ weapon }: { weapon: WeaponId }) {
+  const name = WEAPONS.find((w) => w.id === weapon)!.name;
   return (
     <img
+      key={weapon}
       className="doctor"
-      src="./doctor.png"
-      alt="젤리 블래스터를 든 픽셀 아트 보건교사"
+      src={DOCTOR_IMAGES[weapon]}
+      alt={`${name}을(를) 든 픽셀 아트 보건교사 안은영`}
+      title={`장착 무기: ${name}`}
       draggable={false}
     />
   );
@@ -1223,7 +1234,13 @@ export default function App() {
 
         <section className="shop-content">
           <div className="shop-hero paper-card">
-            <img src="./doctor.png" alt="보건교사 안은영" draggable={false} />
+            <img
+              key={equippedWeapon}
+              className="shop-doctor"
+              src={DOCTOR_IMAGES[equippedWeapon]}
+              alt={`${equipped.name}을(를) 든 보건교사 안은영`}
+              draggable={false}
+            />
             <div>
               <span className="story-label">NOW EQUIPPED</span>
               <div className="shop-equipped">
@@ -1340,17 +1357,7 @@ export default function App() {
             <strong>{shots}</strong>
             <span className="mini-capsule" />
           </div>
-          <button className="equipped-chip" onClick={openShop} title="무기 상점 열기">
-            <span className="weapon-icon">
-              <WeaponIcon id={equippedWeapon} />
-            </span>
-            <span>
-              <small>장착 무기</small>
-              <strong>{WEAPONS.find((w) => w.id === equippedWeapon)!.name}</strong>
-              <em>{WEAPONS.find((w) => w.id === equippedWeapon)!.effect}</em>
-            </span>
-          </button>
-          <Doctor />
+          <Doctor weapon={equippedWeapon} />
         </aside>
 
         <div className="board-wrap">
