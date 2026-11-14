@@ -85,21 +85,32 @@
 .topbar {
   position: relative;
   z-index: 6;
-  height: 108px;
+  height: 112px;
   display: grid;
-  grid-template-columns: minmax(235px, 1.1fr) minmax(190px, 0.9fr) minmax(245px, 1.18fr) minmax(
-      180px,
-      0.82fr
+  grid-template-columns: minmax(280px, 1.45fr) minmax(180px, 0.72fr) minmax(150px, 0.62fr) minmax(
+      165px,
+      0.7fr
     ) 72px;
-  gap: 16px;
+  gap: 13px;
   align-items: center;
-  padding: 13px 20px 8px;
+  padding: 15px 24px 10px;
   max-width: 1500px;
   margin: auto;
+}
+.topbar::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 9px 8px 5px;
+  border: 2px solid rgba(255, 255, 255, 0.28);
+  border-radius: 28px;
+  background: rgba(107, 96, 177, 0.2);
+  box-shadow: inset 0 0 35px rgba(255, 255, 255, 0.1);
 }
 
 .teacher-badge,
 .stat-card,
+.collection-button,
 .pause-button {
   border: 5px solid var(--ink);
   box-shadow:
@@ -110,21 +121,34 @@
 .teacher-badge {
   position: relative;
   height: 94px;
-  border-radius: 42% 52% 44% 48%;
-  background: #fffdfb;
-  padding: 17px 48px 10px 62px;
+  border-radius: 25px 32px 28px 30px;
+  background: linear-gradient(110deg, rgba(255, 255, 255, 0.9), transparent 45%), #fff9fc;
+  padding: 15px 52px 10px 72px;
   line-height: 1;
   transform: rotate(-1deg);
 }
 .teacher-badge small {
   display: block;
-  font-size: 22px;
+  color: #756b9c;
+  font-size: 14px;
+  letter-spacing: 1px;
 }
 .teacher-badge strong {
   display: block;
-  margin-top: 5px;
-  font-size: 32px;
-  letter-spacing: 1px;
+  margin-top: 6px;
+  font-family: "Nunito", "Jua", sans-serif;
+  font-size: clamp(25px, 2.3vw, 35px);
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: #4b408c;
+}
+.logo-spark {
+  position: absolute;
+  right: 17px;
+  top: 25px;
+  color: #f1cf4e;
+  font-size: 29px;
+  text-shadow: 2px 2px 0 #a77c31;
 }
 .capsule,
 .mini-capsule {
@@ -143,10 +167,10 @@
 }
 .bunny {
   position: absolute;
-  left: 15px;
-  top: -24px;
-  width: 48px;
-  height: 58px;
+  left: 14px;
+  top: 15px;
+  width: 46px;
+  height: 52px;
   border: 4px solid var(--ink);
   border-radius: 48%;
   background: white;
@@ -199,6 +223,33 @@
   font-weight: 900;
   white-space: nowrap;
 }
+.stage-card {
+  position: relative;
+  justify-content: flex-start;
+  padding: 0 20px;
+  background: linear-gradient(120deg, #fffdf8, #fff4d2);
+}
+.stage-card::after {
+  content: "EASY";
+  position: absolute;
+  right: 11px;
+  top: -11px;
+  padding: 3px 8px;
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  color: white;
+  background: #ef729e;
+  font:
+    900 10px/1 "Nunito",
+    sans-serif;
+  letter-spacing: 0.6px;
+}
+.stage-card span small {
+  display: block;
+  color: #8b82a0;
+  font-size: 10px;
+  line-height: 1;
+}
 .stat-card svg {
   width: 34px;
   fill: #f5d754;
@@ -219,6 +270,50 @@
   color: #b37b27;
   background: #f5d95d;
   box-shadow: inset 0 0 0 4px #fff29b;
+}
+.coin-card {
+  background: linear-gradient(120deg, #fffdf8, #fff7dc);
+}
+.collection-button {
+  height: 65px;
+  padding: 0 14px;
+  border-radius: 18px;
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  grid-template-rows: 1fr 1fr;
+  column-gap: 9px;
+  align-items: center;
+  color: #4b408c;
+  background: linear-gradient(135deg, #fff, #eee9ff);
+  text-align: left;
+}
+.collection-button svg {
+  grid-row: 1 / 3;
+  width: 31px;
+  fill: #dbb9e8;
+  stroke: #55498f;
+  stroke-width: 2.2px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.collection-button span {
+  align-self: end;
+  font-size: 18px;
+  line-height: 1;
+}
+.collection-button b {
+  align-self: start;
+  margin-top: 3px;
+  color: #9289aa;
+  font:
+    900 11px/1 "Nunito",
+    sans-serif;
+}
+.collection-button:hover {
+  translate: 0 -2px;
+  box-shadow:
+    0 8px 0 rgba(58, 51, 104, 0.32),
+    inset 0 0 0 3px rgba(255, 255, 255, 0.66);
 }
 .pause-button {
   width: 69px;
@@ -249,7 +344,7 @@
   position: relative;
   z-index: 4;
   width: min(1460px, calc(100vw - 30px));
-  height: calc(100vh - 126px);
+  height: calc(100vh - 128px);
   min-height: 650px;
   margin: 0 auto;
   display: grid;
@@ -262,11 +357,20 @@
   min-height: 0;
   overflow: hidden;
   border: 8px solid rgba(62, 54, 105, 0.92);
-  border-radius: 32px 32px 0 0;
+  border-radius: 34px 34px 6px 6px;
   box-shadow:
     0 0 0 6px rgba(244, 235, 255, 0.75),
     inset 0 0 0 5px rgba(255, 255, 255, 0.25);
   background: #6664a7;
+}
+.board-wrap::before {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  inset: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+  pointer-events: none;
 }
 .game-canvas {
   display: block;
@@ -280,6 +384,21 @@
   position: relative;
   min-width: 0;
 }
+.side-caption {
+  position: absolute;
+  left: 50%;
+  top: 48px;
+  translate: -50% 0;
+  color: rgba(67, 57, 117, 0.7);
+  font:
+    900 11px/1 "Nunito",
+    sans-serif;
+  letter-spacing: 1.7px;
+  white-space: nowrap;
+}
+.right-caption {
+  top: 72px;
+}
 .paper-card {
   background: #fffaf0;
   border: 5px solid var(--ink);
@@ -291,7 +410,7 @@
   position: relative;
   width: 90%;
   min-height: 195px;
-  margin: 85px auto 0;
+  margin: 91px auto 0;
   padding: 40px 15px 20px;
   text-align: center;
   transform: rotate(-2deg);
@@ -356,7 +475,7 @@
 
 .combo-card {
   width: 98%;
-  margin: 110px 0 0;
+  margin: 116px 0 0;
   min-height: 135px;
   padding: 22px 10px 13px;
   border-radius: 48% 38% 42% 31%;
@@ -889,12 +1008,19 @@
   }
   .topbar {
     height: 92px;
-    grid-template-columns: 1fr 1.1fr 1.15fr 64px;
+    grid-template-columns: minmax(230px, 1.4fr) minmax(145px, 0.8fr) minmax(155px, 0.9fr) 64px;
     gap: 9px;
     padding: 10px;
   }
   .teacher-badge {
-    display: none;
+    height: 72px;
+    padding-top: 11px;
+  }
+  .teacher-badge strong {
+    font-size: 24px;
+  }
+  .teacher-badge .bunny {
+    top: 10px;
   }
   .stat-card {
     height: 58px;
@@ -902,6 +1028,10 @@
   }
   .coin-card {
     display: none;
+  }
+  .collection-button {
+    height: 58px;
+    border-width: 4px;
   }
   .pause-button {
     width: 60px;
@@ -1036,9 +1166,41 @@
     min-height: 100svh;
   }
   .topbar {
-    height: 74px;
-    grid-template-columns: 1fr 1.35fr 52px;
-    padding: 7px;
+    height: 123px;
+    grid-template-columns: 1fr 1.15fr 52px;
+    grid-template-rows: 51px 49px;
+    gap: 7px;
+    padding: 8px;
+  }
+  .topbar::before {
+    inset: 4px;
+    border-radius: 21px;
+  }
+  .teacher-badge {
+    grid-column: 1 / 4;
+    width: 100%;
+    height: 51px;
+    padding: 7px 40px 5px 19px;
+    border-width: 3px;
+    border-radius: 16px;
+    transform: none;
+  }
+  .teacher-badge small {
+    display: inline;
+    margin-right: 8px;
+    font-size: 10px;
+  }
+  .teacher-badge strong {
+    display: inline;
+    font-size: 20px;
+  }
+  .teacher-badge .bunny {
+    display: none;
+  }
+  .logo-spark {
+    right: 13px;
+    top: 8px;
+    font-size: 23px;
   }
   .stat-card {
     height: 49px;
@@ -1059,13 +1221,30 @@
     border-width: 3px;
     border-radius: 14px;
   }
+  .collection-button {
+    height: 49px;
+    padding: 0 9px;
+    grid-template-columns: 24px 1fr;
+    column-gap: 6px;
+    border-width: 3px;
+    border-radius: 14px;
+  }
+  .collection-button svg {
+    width: 24px;
+  }
+  .collection-button span {
+    font-size: 15px;
+  }
+  .collection-button b {
+    font-size: 9px;
+  }
   .pause-button i {
     height: 25px;
     width: 7px;
   }
   .game-layout {
     width: calc(100vw - 12px);
-    height: calc(100svh - 80px);
+    height: calc(100svh - 130px);
     min-height: 560px;
     grid-template-columns: 1fr;
   }
@@ -1074,6 +1253,9 @@
     position: absolute;
     z-index: 7;
     pointer-events: none;
+  }
+  .side-caption {
+    display: none;
   }
   .left-panel {
     left: 8px;

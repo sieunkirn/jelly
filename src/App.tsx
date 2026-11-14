@@ -120,6 +120,15 @@ function StarIcon({ className = "" }: { className?: string }) {
   );
 }
 
+function BookIcon() {
+  return (
+    <svg viewBox="0 0 28 28" aria-hidden="true">
+      <path d="M4 5.5c4.1-.8 7.4.2 10 2.3v16c-2.6-2.1-5.9-3.1-10-2.3v-16Zm20 0c-4.1-.8-7.4.2-10 2.3v16c2.6-2.1 5.9-3.1 10-2.3v-16Z" />
+      <path d="M7 9.5c1.5-.1 2.8.2 4 .8M7 13c1.5-.1 2.8.2 4 .8m10-4.3c-1.5-.1-2.8.2-4 .8m4 2.7c-1.5-.1-2.8.2-4 .8" />
+    </svg>
+  );
+}
+
 function JellyPreview({ color, heart = false }: { color: number; heart?: boolean }) {
   return (
     <div
@@ -146,7 +155,7 @@ function Doctor() {
 
 export default function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [score, setScore] = useState(12340);
+  const [, setScore] = useState(12340);
   const [shots, setShots] = useState(24);
   const [paused, setPaused] = useState(false);
   const [status, setStatus] = useState<GameStatus>("playing");
@@ -633,24 +642,28 @@ export default function App() {
             <b />
             <em />
           </span>
-          <small>보건교사</small>
-          <strong>안은영</strong>
-          <span className="capsule" />
+          <small>보건교사 안은영의</small>
+          <strong>JELLY HUNT</strong>
+          <span className="logo-spark">✦</span>
         </div>
         <div className="stat-card stage-card">
           <StarIcon />
-          <span>STAGE 1-1</span>
-        </div>
-        <div className="stat-card score-card">
-          <StarIcon />
-          <span>SCORE</span>
-          <strong>{score.toLocaleString()}</strong>
+          <span>
+            <small>STAGE</small> 1-1
+          </span>
         </div>
         <div className="stat-card coin-card">
           <span className="coin">J</span>
           <span>×</span>
           <strong>{coins}</strong>
         </div>
+        <button className="collection-button" onClick={() => setView("collection")}>
+          <BookIcon />
+          <span>젤리 도감</span>
+          <b>
+            {unlocked.size}/{JELLIES.length}
+          </b>
+        </button>
         <button
           className="pause-button"
           onClick={() => status === "playing" && setPaused((v) => !v)}
@@ -669,6 +682,7 @@ export default function App() {
 
       <section className="game-layout">
         <aside className="left-panel">
+          <span className="side-caption">HEALTH TEACHER</span>
           <div className="shots-note paper-card">
             <span className="tape" />
             <small>남은 발사 횟수</small>
@@ -716,6 +730,7 @@ export default function App() {
         </div>
 
         <aside className="right-panel">
+          <span className="side-caption right-caption">JELLY STATUS</span>
           <div className="combo-card paper-card">
             <span>콤보!</span>
             <strong>×{combo}</strong>
