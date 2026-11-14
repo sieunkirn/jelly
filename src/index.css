@@ -343,11 +343,14 @@
 }
 .doctor {
   position: absolute;
-  width: 130%;
-  max-width: 330px;
-  left: -27px;
-  bottom: -5px;
-  overflow: visible;
+  width: 148%;
+  max-width: 360px;
+  height: auto;
+  left: -48px;
+  bottom: -8px;
+  user-select: none;
+  pointer-events: none;
+  image-rendering: pixelated;
   filter: drop-shadow(4px 5px 0 rgba(91, 75, 142, 0.22));
 }
 

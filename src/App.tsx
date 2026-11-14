@@ -76,31 +76,12 @@ function JellyPreview({ color, heart = false }: { color: number; heart?: boolean
 
 function Doctor() {
   return (
-    <svg className="doctor" viewBox="0 0 310 390" aria-label="젤리 블래스터를 든 보건교사">
-      <g stroke="#353058" strokeWidth="8" strokeLinejoin="round" strokeLinecap="round">
-        <path fill="#2f2a42" d="M68 154C51 84 86 25 149 24c67 0 98 58 78 140l-26 15H86Z" />
-        <path fill="#ffe2cb" d="M89 106c10-43 103-51 121-2v75c-2 40-98 45-116 3-11-24-5-58-5-76Z" />
-        <path
-          fill="#342e4f"
-          d="M76 116c-4-62 31-92 78-92 43 0 75 25 75 85-21-10-28-28-32-47-15 29-63 48-121 54Z"
-        />
-        <path
-          fill="#fff"
-          d="M72 194c31-22 46-21 65-22l26 28 27-28c31 4 57 25 64 66l11 126H54l5-121c2-20 5-37 13-49Z"
-        />
-        <path fill="#b7c9ef" d="m137 172 26 28 27-28 14 22-18 42h-44l-19-42Z" />
-        <path fill="none" d="m162 202-3 104m-87-48h44m-22-22v43" />
-        <path fill="#ffe2cb" d="M205 274c20-7 32 21 14 34l-34 15-12-28Z" />
-        <path fill="#ffe2cb" d="M81 286c-22 5-17 37 6 38l35-5-2-33Z" />
-        <path fill="#5967a3" d="M101 251 205 175l31 42-101 84Z" />
-        <path fill="#e3eaff" d="m193 181 31-24 29 40-25 26Z" />
-        <path fill="#f6efff" d="M96 245 72 268l61 51 30-28Z" />
-        <path fill="#e76ca1" d="M128 247c13-13 35 7 21 22-14 13-36-7-21-22Z" />
-        <path fill="#79a7ef" d="M105 276c12-12 32 6 19 19-12 12-32-6-19-19Z" />
-        <path fill="#fff" d="M232 158 257 142l21 29-25 25Z" />
-        <path fill="none" d="M130 125h2m58 0h2m-35 25c7 4 13 4 20 0" />
-      </g>
-    </svg>
+    <img
+      className="doctor"
+      src="/doctor.png"
+      alt="젤리 블래스터를 든 픽셀 아트 보건교사"
+      draggable={false}
+    />
   );
 }
 
