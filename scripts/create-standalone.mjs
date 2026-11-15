@@ -37,7 +37,7 @@ const standalone = `<!doctype html>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#b9a9ec" />
-    <title>보건교사 안은영 · 젤리 슈터</title>
+    <title>보건교사 안은영: 젤리슈터</title>
     <style>${css}</style>
   </head>
   <body>

@@ -1504,8 +1504,8 @@ export default function App() {
             <b />
             <em />
           </span>
-          <small>보건교사 안은영의</small>
-          <strong>JELLY HUNT</strong>
+          <small>보건교사 안은영:</small>
+          <strong>젤리슈터</strong>
           <span className="logo-spark">✦</span>
         </div>
         <div
